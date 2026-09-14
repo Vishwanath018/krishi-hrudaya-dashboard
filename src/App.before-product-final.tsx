@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+﻿import { useState } from "react";
 import {
   Activity,
   Bell,
@@ -60,7 +60,15 @@ const chartData = [
 ];
 
 const activities = [
-
+  {
+    title: "Power Notification ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ Farm: Ward 26 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ Rammurthy Nagara Motor",
+    description:
+      "Vivekananda Street 1st main Rammurthy nagara Power failed..! R: 279 volts Y: 222 volts B: 284 volts",
+    uid: "865357060805437",
+    time: "09:37 PM",
+    icon: Zap,
+    type: "danger"
+  },
   {
     title: "Motor stopped in MANUAL mode (Stop PB)..!",
     description:
@@ -82,7 +90,7 @@ const activities = [
 ];
 
 const notifications = [
-  ["Power failure detected", "Ward 26 Å“ Rammurthy Nagara", "2 mins ago", Bell, "danger"],
+  ["Power failure detected", "Ward 26 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ Rammurthy Nagara", "2 mins ago", Bell, "danger"],
   ["Test completed", "Farm ID: 1024", "12 mins ago", CheckCircle2, "success"],
   ["New device registered", "Device ID: KH-4582", "1 hour ago", Cpu, "blue"]
 ];
@@ -107,15 +115,6 @@ const permissionItems = [
 const chartColors = ["#3b82f6", "#10b981", "#ef4444", "#f59e0b"];
 
 function App() {
-  const [heroSlide, setHeroSlide] = useState(0);
-
-useEffect(() => {
-  const interval = window.setInterval(() => {
-    setHeroSlide((current) => (current + 1) % 3);
-  }, 2500);
-
-  return () => window.clearInterval(interval);
-}, []);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -144,7 +143,7 @@ useEffect(() => {
         </nav>
 
         <div className="menu-label permission-label">
-          {sidebarOpen ? "PERMISSION" : "•"}
+          {sidebarOpen ? "PERMISSION" : "ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢"}
         </div>
 
         <nav className="sidebar-nav">
@@ -270,59 +269,57 @@ useEffect(() => {
         </header>
 
         <div className="content">
+          <div className="page-top">
+            <div>
+              <div className="breadcrumb">
+                Admin <ChevronRight size={14} /> {activeMenu}
+              </div>
+              <h1>{activeMenu}</h1>
+            </div>
+
+            <div className="date-chip">
+              <CalendarDays size={17} />
+              <div>
+                <span>Sunday</span>
+                <strong>13 Sep 2026</strong>
+              </div>
+            </div>
+          </div>
+
           {activeMenu === "Dashboard" ? (
             <>
-              <section className="hero hero-image-carousel">
-  <div className="hero-page-heading">
-    <div className="hero-breadcrumb">
-      <span>Admin</span>
-      <ChevronRight size={15} />
-      <span>Dashboard</span>
-    </div>
-    <h1>Dashboard</h1>
-  </div>
+              <section className="hero">
+                <div className="hero-content">
+                  <span className="hero-eyebrow">
+                    
+                    Smart Farming Platform
+                  </span>
+                  <h2>Welcome back, Admin!</h2>
+                  <p>
+                    Monitor, manage and empower farms with smarter technology.
+                  </p>
+                  <div className="hero-tags">
+                    <span> Healthy Farms</span>
+                    <span><Activity size={15} /> Stronger Communities</span>
+                    <span><Zap size={15} /> Sustainable Tomorrow</span>
+                  </div>
+                </div>
+                <div className="hero-visual">
+                  <div className="sun" />
+                  <div className="mountain mountain-one" />
+                  <div className="mountain mountain-two" />
+                  <div className="field field-one" />
+                  <div className="field field-two" />
+                  <div className="farm-house">
+                    <div className="roof" />
+                    <div className="house" />
+                  </div>
+                  <div className="tree tree-one" />
+                  <div className="tree tree-two" />
+                </div>
+              </section>
 
-  <div className="hero-date">
-    <CalendarDays size={19} />
-    <div>
-      <span>Sunday</span>
-      <strong>13 Sep 2026</strong>
-    </div>
-  </div>
-
-  <div className="hero-page-heading">
-    <div className="hero-breadcrumb">
-      <span>Admin</span>
-      <ChevronRight size={15} />
-      <span>Dashboard</span>
-    </div>
-    <h1>Dashboard</h1>
-  </div>
-  <div className="hero-carousel-images">
-    {["/hk1.png", "/hk2.png", "/hk3.png"].map((image, index) => (
-      <img
-        key={image}
-        src={image}
-        alt=""
-        className={`hero-carousel-image ${heroSlide === index ? "active" : ""}`}
-      />
-    ))}
-  </div>
-
-  <div className="hero-carousel-dots">
-    {[0, 1, 2].map((index) => (
-      <button
-        key={index}
-        type="button"
-        className={`hero-carousel-dot ${heroSlide === index ? "active" : ""}`}
-        onClick={() => setHeroSlide(index)}
-        aria-label={`Show slide ${index + 1}`}
-      />
-    ))}
-  </div>
-</section>
-
-<section className="dashboard-grid">
+              <section className="dashboard-grid">
                 <div className="stats-grid">
                   {stats.map(([title, value, Icon, type]) => (
                     <div className={`stat-card ${type}`} key={title}>
@@ -351,6 +348,40 @@ useEffect(() => {
                     </button>
                   </div>
 
+                  <div className="product-metrics">
+                    <div className="product-metric assigned">
+                      <div className="product-metric-icon"><Package size={17} /></div>
+                      <div>
+                        <span>Assigned Products</span>
+                        <strong>1,683</strong>
+                      </div>
+                    </div>
+
+                    <div className="product-metric total">
+                      <div className="product-metric-icon"><Package size={17} /></div>
+                      <div>
+                        <span>Total Products</span>
+                        <strong>3,687</strong>
+                      </div>
+                    </div>
+
+                    <div className="product-metric passed">
+                      <div className="product-metric-icon"><CheckCircle2 size={17} /></div>
+                      <div>
+                        <span>Test Passed</span>
+                        <strong>3,573</strong>
+                      </div>
+                    </div>
+
+                    <div className="product-metric failed">
+                      <div className="product-metric-icon"><XCircle size={17} /></div>
+                      <div>
+                        <span>Test Failed</span>
+                        <strong>6</strong>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="chart-container">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
@@ -363,36 +394,6 @@ useEffect(() => {
                           paddingAngle={2}
                           dataKey="value"
                           strokeWidth={0}
-                          labelLine={false}
-                          label={({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-                            if (!percent || percent < 0.01) return null;
-
-                            const radius =
-                              innerRadius +
-                              (outerRadius - innerRadius) *
-                                (index === 1 ? 0.35 : 0.55);
-
-                            const radians = -midAngle * (Math.PI / 180);
-                            const x = cx + radius * Math.cos(radians);
-                            const y = cy + radius * Math.sin(radians);
-
-                            return (
-                              <text
-                                x={x}
-                                y={y}
-                                fill="#ffffff"
-                                textAnchor="middle"
-                                dominantBaseline="central"
-                                fontSize={11}
-                                fontWeight={800}
-                                style={{
-                                  textShadow: "0 1px 3px rgba(0,0,0,0.22)"
-                                }}
-                              >
-                                {(percent * 100).toFixed(1)}%
-                              </text>
-                            );
-                          }}
                         >
                           {chartData.map((_, index) => (
                             <Cell
@@ -401,13 +402,8 @@ useEffect(() => {
                             />
                           ))}
                         </Pie>
-
                         <Tooltip />
-
-                        <Legend
-                          verticalAlign="bottom"
-                          height={35}
-                        />
+                        <Legend verticalAlign="bottom" height={35} />
                       </PieChart>
                     </ResponsiveContainer>
 
@@ -415,6 +411,13 @@ useEffect(() => {
                       <strong>3,687</strong>
                       <span>Total Products</span>
                     </div>
+                  </div>
+
+                  <div className="statistics-list">
+                    <div><span><i className="dot blue" />Total Products</span><strong>3,687</strong></div>
+                    <div><span><i className="dot green" />Test Passed</span><strong>3,573</strong></div>
+                    <div><span><i className="dot red" />Test Failed</span><strong>6</strong></div>
+                    <div><span><i className="dot yellow" />Assigned Products</span><strong>1,683</strong></div>
                   </div>
 
                   <div className="product-overview">
@@ -428,11 +431,9 @@ useEffect(() => {
                         <span>Assigned Products</span>
                         <strong>1,683</strong>
                       </div>
-
                       <div className="overview-bar warning">
-                        <i style={{ width: "45.6%" }} />
+                        <i style={{width:"45.6%"}} />
                       </div>
-
                       <small>45.6%</small>
                     </div>
 
@@ -441,11 +442,9 @@ useEffect(() => {
                         <span>Total Products</span>
                         <strong>3,687</strong>
                       </div>
-
                       <div className="overview-bar">
-                        <i style={{ width: "100%" }} />
+                        <i style={{width:"100%"}} />
                       </div>
-
                       <small>100%</small>
                     </div>
 
@@ -454,11 +453,9 @@ useEffect(() => {
                         <span>Test Passed</span>
                         <strong>3,573</strong>
                       </div>
-
                       <div className="overview-bar success">
-                        <i style={{ width: "96.9%" }} />
+                        <i style={{width:"96.9%"}} />
                       </div>
-
                       <small>96.9%</small>
                     </div>
 
@@ -467,15 +464,26 @@ useEffect(() => {
                         <span>Test Failed</span>
                         <strong>6</strong>
                       </div>
-
                       <div className="overview-bar danger">
-                        <i style={{ width: "8%" }} />
+                        <i style={{width:"8%"}} />
                       </div>
-
                       <small>0.2%</small>
                     </div>
                   </div>
 
+                  <div className="product-insights">
+                    <div>
+                      <span>TOP CATEGORY</span>
+                      <strong>Water Pumps</strong>
+                      <small>1,245 products</small>
+                    </div>
+
+                    <div>
+                      <span>ACTIVE LOCATION</span>
+                      <strong>Rammurthy Nagar</strong>
+                      <small>892 products</small>
+                    </div>
+                  </div>
                 </section>
                 <section className="panel activities-panel">
                   <div className="panel-header">
@@ -489,123 +497,30 @@ useEffect(() => {
                   <div className="activities-list">
                     {activities.map((activity) => {
                       const Icon = activity.icon;
-
-                      const voltage = activity.description.match(
-                        /R:\s*(\d+)\s*volts\s*Y:\s*(\d+)\s*volts\s*B:\s*(\d+)\s*volts/
-                      );
-
-                      const amps = activity.description.match(
-                        /R:\s*(\d+)\s*amps\s*Y:\s*(\d+)\s*amps\s*B:\s*(\d+)\s*amps/
-                      );
-
-                      const currentRunTime = activity.description.match(
-                        /Current Run Time:\s*([^;]+)/
-                      )?.[1];
-
-                      const totalRunTime = activity.description.match(
-                        /Total Run Time:\s*([^;]+)/
-                      )?.[1];
-
-                      const waterYield = activity.description.match(
-                        /Water Yield:\s*(.+)$/
-                      )?.[1];
-
-                      const descriptionText = activity.description
-                        .replace(
-                          /R:\s*\d+\s*volts\s*Y:\s*\d+\s*volts\s*B:\s*\d+\s*volts/,
-                          ""
-                        )
-                        .replace(
-                          /R:\s*\d+\s*amps\s*Y:\s*\d+\s*amps\s*B:\s*\d+\s*amps/,
-                          ""
-                        )
-                        .replace(/Current Run Time:\s*[^;]+;?/g, "")
-                        .replace(/Total Run Time:\s*[^;]+;?/g, "")
-                        .replace(/Water Yield:\s*.+$/g, "")
-                        .trim();
-
                       return (
                         <div className="activity-item" key={activity.uid}>
                           <div className={`activity-icon ${activity.type}`}>
-                            <Icon size={18} />
+                            <Icon size={19} />
                           </div>
-
                           <div className="activity-content">
                             <div className="activity-title-row">
                               <strong>{activity.title}</strong>
-                              <ChevronRight size={15} />
+                              <ChevronRight size={16} />
                             </div>
-
-                            {descriptionText && (
-                              <p className="activity-description">
-                                {descriptionText}
-                              </p>
-                            )}
-
-                            {voltage && (
-                              <div className="activity-data-row">
-                                <span className="activity-data-box">
-                                  <b>R:</b> {voltage[1]} volts
-                                </span>
-                                <span className="activity-data-box">
-                                  <b>Y:</b> {voltage[2]} volts
-                                </span>
-                                <span className="activity-data-box">
-                                  <b>B:</b> {voltage[3]} volts
-                                </span>
-                              </div>
-                            )}
-
-                            {amps && (
-                              <div className="activity-data-row">
-                                <span className="activity-data-box">
-                                  <b>R:</b> {amps[1]} amps
-                                </span>
-                                <span className="activity-data-box">
-                                  <b>Y:</b> {amps[2]} amps
-                                </span>
-                                <span className="activity-data-box">
-                                  <b>B:</b> {amps[3]} amps
-                                </span>
-                              </div>
-                            )}
-
-                            {(currentRunTime || totalRunTime || waterYield) && (
-                              <div className="activity-data-row activity-extra-row">
-                                {currentRunTime && (
-                                  <span className="activity-data-box">
-                                    <b>Current Run Time:</b> {currentRunTime}
-                                  </span>
-                                )}
-
-                                {totalRunTime && (
-                                  <span className="activity-data-box">
-                                    <b>Total Run Time:</b> {totalRunTime}
-                                  </span>
-                                )}
-
-                                {waterYield && (
-                                  <span className="activity-data-box">
-                                    <b>Water Yield:</b> {waterYield}
-                                  </span>
-                                )}
-                              </div>
-                            )}
-
+                            <p>{activity.description}</p>
                             <div className="activity-meta">
-                              <span className="activity-uid">
-                                UID: {activity.uid}
-                              </span>
-                              <span className="activity-meta-divider" />
+                              <span>UID: {activity.uid}</span>
+                              <span>ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢</span>
                               <span>Sep 13, 2026</span>
-                              <span className="activity-meta-divider" />
+                              <span>ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢</span>
                               <span>{activity.time}</span>
                             </div>
                           </div>
                         </div>
                       );
                     })}
-                  </div>                </section>
+                  </div>
+                </section>
               </section>
 
               <section className="feature-row">
@@ -631,7 +546,7 @@ useEffect(() => {
                   <div className="feature-icon cyan"><Droplets size={24} /></div>
                   <div>
                     <strong>Efficient Resource Use</strong>
-                    <span>Water, energy and crops Å“ optimized.</span>
+                    <span>Water, energy and crops ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ optimized.</span>
                   </div>
                   <button><ChevronRight size={18} /></button>
                 </div>
@@ -652,169 +567,42 @@ useEffect(() => {
             </div>
           )}
         </div>
+
         <button
           className={`assistant-button ${assistantOpen ? "open" : ""}`}
           onClick={() => setAssistantOpen(!assistantOpen)}
-          aria-label="Open Krishi Assistant"
         >
-          <div className="assistant-button-logo">
-            <img src="/KH.png" alt="Krishi Hrudaya" />
-          </div>
+          {assistantOpen ? <XCircle size={23} /> : <MessageSquare size={23} />}
           <span>
             {assistantOpen ? "Close Assistant" : "Ask Krishi Assistant"}
             {!assistantOpen && <small>How can I help you today?</small>}
           </span>
-          {assistantOpen ? <XCircle size={20} /> : <MessageSquare size={20} />}
         </button>
 
         {assistantOpen && (
           <div className="assistant-panel">
             <div className="assistant-header">
-              <div className="assistant-brand">
-                <div className="assistant-logo">
-                  <img src="/KH.png" alt="Krishi Hrudaya" />
-                </div>
-                <div>
-                  <strong>Krishi Assistant</strong>
-                  <span>Your smart farming dashboard partner</span>
-                </div>
+              <div className="assistant-logo"><img src="/KH.png" alt="KH" style={{width:"30px",height:"30px",objectFit:"contain"}} /></div>
+              <div>
+                <strong>Krishi Assistant</strong>
+                <span>Smart dashboard assistant</span>
               </div>
-
-              <button
-                className="assistant-close"
-                onClick={() => setAssistantOpen(false)}
-                aria-label="Close assistant"
-              >
-                <XCircle size={21} />
+              <button onClick={() => setAssistantOpen(false)}>
+                <XCircle size={19} />
               </button>
             </div>
 
             <div className="assistant-body">
-              <div className="assistant-welcome">
-                <div className="assistant-bot-icon">
-                  <MessageSquare size={21} />
-                  <i />
-                </div>
+              <p>What would you like to know?</p>
+              <button>Show failed tests</button>
+              <button>Show today's power failures</button>
+              <button>How many active devices?</button>
+              <button>Show recent motor events</button>
+            </div>
 
-                <div className="assistant-welcome-card">
-                  <strong>Hello! 👋</strong>
-                  <p>
-                    I’m your Krishi Assistant. I can help you analyze dashboard
-                    data, check device status, view reports, and answer
-                    questions about your farms.
-                  </p>
-                </div>
-              </div>
-
-              <div className="assistant-section-title">
-                Here are some quick actions
-              </div>
-
-              <div className="assistant-actions">
-                <button>
-                  <span className="assistant-action-icon">
-                    <FileBarChart size={19} />
-                  </span>
-                  <span>
-                    <strong>Show failed tests</strong>
-                    <small>View recent test failures</small>
-                  </span>
-                  <ChevronRight size={16} />
-                </button>
-
-                <button>
-                  <span className="assistant-action-icon">
-                    <Zap size={19} />
-                  </span>
-                  <span>
-                    <strong>Today's power failures</strong>
-                    <small>Check latest power issues</small>
-                  </span>
-                  <ChevronRight size={16} />
-                </button>
-
-                <button>
-                  <span className="assistant-action-icon">
-                    <Cpu size={19} />
-                  </span>
-                  <span>
-                    <strong>Active devices</strong>
-                    <small>How many devices are online?</small>
-                  </span>
-                  <ChevronRight size={16} />
-                </button>
-
-                <button>
-                  <span className="assistant-action-icon">
-                    <Activity size={19} />
-                  </span>
-                  <span>
-                    <strong>Recent motor events</strong>
-                    <small>View motor activity logs</small>
-                  </span>
-                  <ChevronRight size={16} />
-                </button>
-
-                <button>
-                  <span className="assistant-action-icon">
-                    <Leaf size={19} />
-                  </span>
-                  <span>
-                    <strong>Farm statistics</strong>
-                    <small>Get overall farm insights</small>
-                  </span>
-                  <ChevronRight size={16} />
-                </button>
-
-                <button>
-                  <span className="assistant-action-icon">
-                    <FileBarChart size={19} />
-                  </span>
-                  <span>
-                    <strong>Generate report</strong>
-                    <small>Create a custom report</small>
-                  </span>
-                  <ChevronRight size={16} />
-                </button>
-              </div>
-
-              <div className="assistant-or">
-                <span />
-                <strong>OR ASK ANYTHING</strong>
-                <span />
-              </div>
-
-              <div className="assistant-prompts">
-                <button>“Show water yield for this month”</button>
-                <button>“Which motor is offline?”</button>
-                <button>“Compare this month with last month”</button>
-                <button>“Show all alerts”</button>
-              </div>
-
-              <div className="assistant-input">
-                <div className="assistant-input-field">
-                  <Zap size={17} />
-                  <input
-                    type="text"
-                    placeholder="Ask me anything..."
-                  />
-                  <button aria-label="Additional options">
-                    <ClipboardList size={17} />
-                  </button>
-                </div>
-
-                <button className="assistant-send" aria-label="Send">
-                  <Search size={19} />
-                </button>
-              </div>
-
-              <div className="assistant-hint">
-                <span>💡</span>
-                <p>
-                  Try asking about devices, motors, water yield, alerts, or
-                  reports.
-                </p>
-              </div>
+            <div className="assistant-input">
+              <input placeholder="Ask something..." />
+              <button><Search size={18} /></button>
             </div>
           </div>
         )}
@@ -824,11 +612,6 @@ useEffect(() => {
 }
 
 export default App;
-
-
-
-
-
 
 
 

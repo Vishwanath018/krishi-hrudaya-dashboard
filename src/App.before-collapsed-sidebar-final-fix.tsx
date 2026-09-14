@@ -15,6 +15,7 @@ import {
   Grid2X2,
   Leaf,
   LockKeyhole,
+  LogOut,
   Menu,
   MessageSquare,
   Moon,
@@ -171,13 +172,23 @@ useEffect(() => {
           </div>
         )}
 
-        <button
+        <div className="sidebar-bottom-actions">
+  <button
+    className="sidebar-logout-button"
+    title="Logout"
+  >
+    <LogOut size={20} />
+    {sidebarOpen && <span>Logout</span>}
+  </button>
+
+  <button
           className="collapse-button"
           onClick={() => setSidebarOpen(!sidebarOpen)}
         >
           {sidebarOpen ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
           {sidebarOpen && "Collapse"}
         </button>
+</div>
       </aside>
 
       <main className="main">
@@ -824,6 +835,7 @@ useEffect(() => {
 }
 
 export default App;
+
 
 
 

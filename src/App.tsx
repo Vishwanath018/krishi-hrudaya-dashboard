@@ -360,6 +360,36 @@ function App() {
                           paddingAngle={2}
                           dataKey="value"
                           strokeWidth={0}
+                          labelLine={false}
+                          label={({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+                            if (!percent || percent < 0.01) return null;
+
+                            const radius =
+                              innerRadius +
+                              (outerRadius - innerRadius) *
+                                (index === 1 ? 0.35 : 0.55);
+
+                            const radians = -midAngle * (Math.PI / 180);
+                            const x = cx + radius * Math.cos(radians);
+                            const y = cy + radius * Math.sin(radians);
+
+                            return (
+                              <text
+                                x={x}
+                                y={y}
+                                fill="#ffffff"
+                                textAnchor="middle"
+                                dominantBaseline="central"
+                                fontSize={11}
+                                fontWeight={800}
+                                style={{
+                                  textShadow: "0 1px 3px rgba(0,0,0,0.22)"
+                                }}
+                              >
+                                {(percent * 100).toFixed(1)}%
+                              </text>
+                            );
+                          }}
                         >
                           {chartData.map((_, index) => (
                             <Cell

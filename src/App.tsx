@@ -270,26 +270,34 @@ useEffect(() => {
         </header>
 
         <div className="content">
-          <div className="page-top">
-            <div>
-              <div className="breadcrumb">
-                Admin <ChevronRight size={14} /> {activeMenu}
-              </div>
-              <h1>{activeMenu}</h1>
-            </div>
-
-            <div className="date-chip">
-              <CalendarDays size={17} />
-              <div>
-                <span>Sunday</span>
-                <strong>13 Sep 2026</strong>
-              </div>
-            </div>
-          </div>
-
           {activeMenu === "Dashboard" ? (
             <>
               <section className="hero hero-image-carousel">
+  <div className="hero-page-heading">
+    <div className="hero-breadcrumb">
+      <span>Admin</span>
+      <ChevronRight size={15} />
+      <span>Dashboard</span>
+    </div>
+    <h1>Dashboard</h1>
+  </div>
+
+  <div className="hero-date">
+    <CalendarDays size={19} />
+    <div>
+      <span>Sunday</span>
+      <strong>13 Sep 2026</strong>
+    </div>
+  </div>
+
+  <div className="hero-page-heading">
+    <div className="hero-breadcrumb">
+      <span>Admin</span>
+      <ChevronRight size={15} />
+      <span>Dashboard</span>
+    </div>
+    <h1>Dashboard</h1>
+  </div>
   <div className="hero-carousel-images">
     {["/hk1.png", "/hk2.png", "/hk3.png"].map((image, index) => (
       <img
@@ -689,6 +697,8 @@ useEffect(() => {
 }
 
 export default App;
+
+
 
 
 

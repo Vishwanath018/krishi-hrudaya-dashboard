@@ -348,6 +348,48 @@ function App() {
                     </button>
                   </div>
 
+                  <div className="product-metrics">
+                    <div className="product-metric assigned">
+                      <div className="product-metric-icon">
+                        <Package size={17} />
+                      </div>
+                      <div>
+                        <span>Assigned Products</span>
+                        <strong>1,683</strong>
+                      </div>
+                    </div>
+
+                    <div className="product-metric total">
+                      <div className="product-metric-icon">
+                        <Package size={17} />
+                      </div>
+                      <div>
+                        <span>Total Products</span>
+                        <strong>3,687</strong>
+                      </div>
+                    </div>
+
+                    <div className="product-metric passed">
+                      <div className="product-metric-icon">
+                        <CheckCircle2 size={17} />
+                      </div>
+                      <div>
+                        <span>Test Passed</span>
+                        <strong>3,573</strong>
+                      </div>
+                    </div>
+
+                    <div className="product-metric failed">
+                      <div className="product-metric-icon">
+                        <XCircle size={17} />
+                      </div>
+                      <div>
+                        <span>Test Failed</span>
+                        <strong>6</strong>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="chart-container">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
@@ -368,8 +410,13 @@ function App() {
                             />
                           ))}
                         </Pie>
+
                         <Tooltip />
-                        <Legend verticalAlign="bottom" height={35} />
+
+                        <Legend
+                          verticalAlign="bottom"
+                          height={35}
+                        />
                       </PieChart>
                     </ResponsiveContainer>
 
@@ -379,14 +426,79 @@ function App() {
                     </div>
                   </div>
 
-                  <div className="statistics-list">
-                    <div><span><i className="dot blue" />Total Products</span><strong>3,687</strong></div>
-                    <div><span><i className="dot green" />Test Passed</span><strong>3,573</strong></div>
-                    <div><span><i className="dot red" />Test Failed</span><strong>6</strong></div>
-                    <div><span><i className="dot yellow" />Assigned Products</span><strong>1,683</strong></div>
+                  <div className="product-overview">
+                    <div className="overview-heading">
+                      <span>PRODUCT OVERVIEW</span>
+                      <strong>Testing & Assignment Status</strong>
+                    </div>
+
+                    <div className="overview-item">
+                      <div>
+                        <span>Assigned Products</span>
+                        <strong>1,683</strong>
+                      </div>
+
+                      <div className="overview-bar warning">
+                        <i style={{ width: "45.6%" }} />
+                      </div>
+
+                      <small>45.6%</small>
+                    </div>
+
+                    <div className="overview-item">
+                      <div>
+                        <span>Total Products</span>
+                        <strong>3,687</strong>
+                      </div>
+
+                      <div className="overview-bar">
+                        <i style={{ width: "100%" }} />
+                      </div>
+
+                      <small>100%</small>
+                    </div>
+
+                    <div className="overview-item">
+                      <div>
+                        <span>Test Passed</span>
+                        <strong>3,573</strong>
+                      </div>
+
+                      <div className="overview-bar success">
+                        <i style={{ width: "96.9%" }} />
+                      </div>
+
+                      <small>96.9%</small>
+                    </div>
+
+                    <div className="overview-item">
+                      <div>
+                        <span>Test Failed</span>
+                        <strong>6</strong>
+                      </div>
+
+                      <div className="overview-bar danger">
+                        <i style={{ width: "8%" }} />
+                      </div>
+
+                      <small>0.2%</small>
+                    </div>
+                  </div>
+
+                  <div className="product-insights">
+                    <div>
+                      <span>TOP CATEGORY</span>
+                      <strong>Water Pumps</strong>
+                      <small>1,245 products</small>
+                    </div>
+
+                    <div>
+                      <span>ACTIVE LOCATION</span>
+                      <strong>Rammurthy Nagar</strong>
+                      <small>892 products</small>
+                    </div>
                   </div>
                 </section>
-
                 <section className="panel activities-panel">
                   <div className="panel-header">
                     <div>
@@ -514,6 +626,10 @@ function App() {
 }
 
 export default App;
+
+
+
+
 
 
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   Activity,
   Bell,
@@ -60,15 +60,7 @@ const chartData = [
 ];
 
 const activities = [
-  {
-    title: "Power Notification Ã¢â‚¬â€œ Farm: Ward 26 Ã¢â‚¬â€œ Rammurthy Nagara Motor",
-    description:
-      "Vivekananda Street 1st main Rammurthy nagara Power failed..! R: 279 volts Y: 222 volts B: 284 volts",
-    uid: "865357060805437",
-    time: "09:37 PM",
-    icon: Zap,
-    type: "danger"
-  },
+
   {
     title: "Motor stopped in MANUAL mode (Stop PB)..!",
     description:
@@ -90,7 +82,7 @@ const activities = [
 ];
 
 const notifications = [
-  ["Power failure detected", "Ward 26 Ã¢â‚¬â€œ Rammurthy Nagara", "2 mins ago", Bell, "danger"],
+  ["Power failure detected", "Ward 26 Å“ Rammurthy Nagara", "2 mins ago", Bell, "danger"],
   ["Test completed", "Farm ID: 1024", "12 mins ago", CheckCircle2, "success"],
   ["New device registered", "Device ID: KH-4582", "1 hour ago", Cpu, "blue"]
 ];
@@ -126,7 +118,7 @@ function App() {
     <div className={`app ${darkMode ? "dark" : ""}`}>
       <aside className={`sidebar ${sidebarOpen ? "open" : "collapsed"}`}>
         <div className="brand"><img src="/KH.png" alt="Krishi Hrudaya" /></div><div className="sidebar-divider" />
-        <div className="menu-label">{sidebarOpen ? "MENU" : "�"}</div>
+        <div className="menu-label">{sidebarOpen ? "MENU" : "•"}</div>
 
         <nav className="sidebar-nav">
           {menuItems.map(([label, Icon]) => (
@@ -143,7 +135,7 @@ function App() {
         </nav>
 
         <div className="menu-label permission-label">
-          {sidebarOpen ? "PERMISSION" : "Ã¢â‚¬Â¢"}
+          {sidebarOpen ? "PERMISSION" : "•"}
         </div>
 
         <nav className="sidebar-nav">
@@ -486,30 +478,123 @@ function App() {
                   <div className="activities-list">
                     {activities.map((activity) => {
                       const Icon = activity.icon;
+
+                      const voltage = activity.description.match(
+                        /R:\s*(\d+)\s*volts\s*Y:\s*(\d+)\s*volts\s*B:\s*(\d+)\s*volts/
+                      );
+
+                      const amps = activity.description.match(
+                        /R:\s*(\d+)\s*amps\s*Y:\s*(\d+)\s*amps\s*B:\s*(\d+)\s*amps/
+                      );
+
+                      const currentRunTime = activity.description.match(
+                        /Current Run Time:\s*([^;]+)/
+                      )?.[1];
+
+                      const totalRunTime = activity.description.match(
+                        /Total Run Time:\s*([^;]+)/
+                      )?.[1];
+
+                      const waterYield = activity.description.match(
+                        /Water Yield:\s*(.+)$/
+                      )?.[1];
+
+                      const descriptionText = activity.description
+                        .replace(
+                          /R:\s*\d+\s*volts\s*Y:\s*\d+\s*volts\s*B:\s*\d+\s*volts/,
+                          ""
+                        )
+                        .replace(
+                          /R:\s*\d+\s*amps\s*Y:\s*\d+\s*amps\s*B:\s*\d+\s*amps/,
+                          ""
+                        )
+                        .replace(/Current Run Time:\s*[^;]+;?/g, "")
+                        .replace(/Total Run Time:\s*[^;]+;?/g, "")
+                        .replace(/Water Yield:\s*.+$/g, "")
+                        .trim();
+
                       return (
                         <div className="activity-item" key={activity.uid}>
                           <div className={`activity-icon ${activity.type}`}>
-                            <Icon size={19} />
+                            <Icon size={18} />
                           </div>
+
                           <div className="activity-content">
                             <div className="activity-title-row">
                               <strong>{activity.title}</strong>
-                              <ChevronRight size={16} />
+                              <ChevronRight size={15} />
                             </div>
-                            <p>{activity.description}</p>
+
+                            {descriptionText && (
+                              <p className="activity-description">
+                                {descriptionText}
+                              </p>
+                            )}
+
+                            {voltage && (
+                              <div className="activity-data-row">
+                                <span className="activity-data-box">
+                                  <b>R:</b> {voltage[1]} volts
+                                </span>
+                                <span className="activity-data-box">
+                                  <b>Y:</b> {voltage[2]} volts
+                                </span>
+                                <span className="activity-data-box">
+                                  <b>B:</b> {voltage[3]} volts
+                                </span>
+                              </div>
+                            )}
+
+                            {amps && (
+                              <div className="activity-data-row">
+                                <span className="activity-data-box">
+                                  <b>R:</b> {amps[1]} amps
+                                </span>
+                                <span className="activity-data-box">
+                                  <b>Y:</b> {amps[2]} amps
+                                </span>
+                                <span className="activity-data-box">
+                                  <b>B:</b> {amps[3]} amps
+                                </span>
+                              </div>
+                            )}
+
+                            {(currentRunTime || totalRunTime || waterYield) && (
+                              <div className="activity-data-row activity-extra-row">
+                                {currentRunTime && (
+                                  <span className="activity-data-box">
+                                    <b>Current Run Time:</b> {currentRunTime}
+                                  </span>
+                                )}
+
+                                {totalRunTime && (
+                                  <span className="activity-data-box">
+                                    <b>Total Run Time:</b> {totalRunTime}
+                                  </span>
+                                )}
+
+                                {waterYield && (
+                                  <span className="activity-data-box">
+                                    <b>Water Yield:</b> {waterYield}
+                                  </span>
+                                )}
+                              </div>
+                            )}
+
                             <div className="activity-meta">
-                              <span>UID: {activity.uid}</span>
-                              <span>Ã¢â‚¬Â¢</span>
+                              <span className="activity-uid">
+                                UID: {activity.uid}
+                              </span>
+                              <span className="activity-meta-divider" />
                               <span>Sep 13, 2026</span>
-                              <span>Ã¢â‚¬Â¢</span>
+                              <span className="activity-meta-divider" />
                               <span>{activity.time}</span>
                             </div>
                           </div>
                         </div>
                       );
                     })}
-                  </div>
-                </section>
+                  </div>                </section>
               </section>
 
               <section className="feature-row">
@@ -535,7 +620,7 @@ function App() {
                   <div className="feature-icon cyan"><Droplets size={24} /></div>
                   <div>
                     <strong>Efficient Resource Use</strong>
-                    <span>Water, energy and crops Ã¢â‚¬â€œ optimized.</span>
+                    <span>Water, energy and crops Å“ optimized.</span>
                   </div>
                   <button><ChevronRight size={18} /></button>
                 </div>

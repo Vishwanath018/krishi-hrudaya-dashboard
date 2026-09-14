@@ -2254,3 +2254,331 @@ button {
   margin-right: 0;
   height: 7px;
 }
+.activities-panel {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.activities-panel .activities-list {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.activities-panel .activity-item {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #e3eaf0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(16, 42, 67, 0.035);
+  overflow: hidden;
+}
+
+.activities-panel .activity-icon {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activities-panel .activity-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 0;
+}
+
+.activities-panel .activity-title-row {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.activities-panel .activity-title-row strong {
+  min-width: 0;
+  color: #102a43;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.activities-panel .activity-title-row svg {
+  flex: 0 0 auto;
+  color: #102a43;
+  margin-top: 1px;
+}
+
+.activities-panel .activity-description {
+  margin: 5px 0 7px;
+  color: #60758a;
+  font-size: 9px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.activities-panel .activity-data-row {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.activities-panel .activity-data-box {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 25px;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 7px;
+  border: 1px solid #d7e0e8;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #263b4e;
+  font-size: 8.5px;
+  line-height: 1.25;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.activities-panel .activity-data-box b {
+  color: #172b3e;
+  font-weight: 750;
+  margin-right: 2px;
+}
+
+.activities-panel .activity-extra-row {
+  gap: 5px;
+}
+
+.activities-panel .activity-meta {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 9px;
+  padding-top: 8px;
+  border-top: 1px solid #edf2f6;
+  color: #708398;
+  font-size: 7.5px;
+  line-height: 1.3;
+}
+
+.activities-panel .activity-uid {
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 6px;
+  border-radius: 5px;
+  background: #edf5ff;
+  color: #245b8f;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.activities-panel .activity-meta-divider {
+  flex: 0 0 1px;
+  width: 1px;
+  height: 12px;
+  background: #d8e1e9;
+}
+
+.activities-panel .activity-icon.danger {
+  background: #fff0f1;
+  color: #ef4444;
+}
+
+.activities-panel .activity-icon.warning {
+  background: #fff8df;
+  color: #e99a00;
+}
+
+.activities-panel .activity-icon.success {
+  background: #effaf4;
+  color: #10a765;
+}
+
+@media (max-width: 900px) {
+  .activities-panel .activity-item {
+    padding: 10px;
+  }
+
+  .activities-panel .activity-icon {
+    flex-basis: 34px;
+    width: 34px;
+    height: 34px;
+  }
+
+  .activities-panel .activity-data-box {
+    font-size: 8px;
+    padding: 4px 6px;
+  }
+}
+.activities-panel {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.activities-panel .activities-list {
+  width: 100%;
+  min-width: 0;
+  height: calc(100% - 72px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow: hidden;
+}
+
+.activities-panel .activity-item {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  flex: 1 1 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 12px;
+  background: #ffffff;
+  border: 1px solid #e3eaf0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(16, 42, 67, 0.035);
+  overflow: hidden;
+}
+
+.activities-panel .activity-icon {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activities-panel .activity-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 0;
+}
+
+.activities-panel .activity-title-row {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.activities-panel .activity-title-row strong {
+  min-width: 0;
+  color: #102a43;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.activities-panel .activity-description {
+  margin: 6px 0 9px;
+  color: #60758a;
+  font-size: 9px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.activities-panel .activity-data-row {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.activities-panel .activity-data-box {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 27px;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 8px;
+  border: 1px solid #d7e0e8;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #263b4e;
+  font-size: 8.5px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.activities-panel .activity-data-box b {
+  color: #172b3e;
+  font-weight: 750;
+  margin-right: 2px;
+}
+
+.activities-panel .activity-meta {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 9px;
+  border-top: 1px solid #edf2f6;
+  color: #708398;
+  font-size: 7.5px;
+  line-height: 1.3;
+}
+
+.activities-panel .activity-uid {
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 6px;
+  border-radius: 5px;
+  background: #edf5ff;
+  color: #245b8f;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.activities-panel .activity-meta-divider {
+  flex: 0 0 1px;
+  width: 1px;
+  height: 12px;
+  background: #d8e1e9;
+}
+
+@media (max-width: 900px) {
+  .activities-panel .activities-list {
+    height: auto;
+  }
+
+  .activities-panel .activity-item {
+    flex: 0 0 auto;
+    padding: 12px 10px;
+  }
+}

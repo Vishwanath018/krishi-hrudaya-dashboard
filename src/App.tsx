@@ -652,42 +652,169 @@ useEffect(() => {
             </div>
           )}
         </div>
-
         <button
           className={`assistant-button ${assistantOpen ? "open" : ""}`}
           onClick={() => setAssistantOpen(!assistantOpen)}
+          aria-label="Open Krishi Assistant"
         >
-          {assistantOpen ? <XCircle size={23} /> : <MessageSquare size={23} />}
+          <div className="assistant-button-logo">
+            <img src="/KH.png" alt="Krishi Hrudaya" />
+          </div>
           <span>
             {assistantOpen ? "Close Assistant" : "Ask Krishi Assistant"}
             {!assistantOpen && <small>How can I help you today?</small>}
           </span>
+          {assistantOpen ? <XCircle size={20} /> : <MessageSquare size={20} />}
         </button>
 
         {assistantOpen && (
           <div className="assistant-panel">
             <div className="assistant-header">
-              <div className="assistant-logo"><img src="/KH.png" alt="KH" style={{width:"30px",height:"30px",objectFit:"contain"}} /></div>
-              <div>
-                <strong>Krishi Assistant</strong>
-                <span>Smart dashboard assistant</span>
+              <div className="assistant-brand">
+                <div className="assistant-logo">
+                  <img src="/KH.png" alt="Krishi Hrudaya" />
+                </div>
+                <div>
+                  <strong>Krishi Assistant</strong>
+                  <span>Your smart farming dashboard partner</span>
+                </div>
               </div>
-              <button onClick={() => setAssistantOpen(false)}>
-                <XCircle size={19} />
+
+              <button
+                className="assistant-close"
+                onClick={() => setAssistantOpen(false)}
+                aria-label="Close assistant"
+              >
+                <XCircle size={21} />
               </button>
             </div>
 
             <div className="assistant-body">
-              <p>What would you like to know?</p>
-              <button>Show failed tests</button>
-              <button>Show today's power failures</button>
-              <button>How many active devices?</button>
-              <button>Show recent motor events</button>
-            </div>
+              <div className="assistant-welcome">
+                <div className="assistant-bot-icon">
+                  <MessageSquare size={21} />
+                  <i />
+                </div>
 
-            <div className="assistant-input">
-              <input placeholder="Ask something..." />
-              <button><Search size={18} /></button>
+                <div className="assistant-welcome-card">
+                  <strong>Hello! 👋</strong>
+                  <p>
+                    I’m your Krishi Assistant. I can help you analyze dashboard
+                    data, check device status, view reports, and answer
+                    questions about your farms.
+                  </p>
+                </div>
+              </div>
+
+              <div className="assistant-section-title">
+                Here are some quick actions
+              </div>
+
+              <div className="assistant-actions">
+                <button>
+                  <span className="assistant-action-icon">
+                    <FileBarChart size={19} />
+                  </span>
+                  <span>
+                    <strong>Show failed tests</strong>
+                    <small>View recent test failures</small>
+                  </span>
+                  <ChevronRight size={16} />
+                </button>
+
+                <button>
+                  <span className="assistant-action-icon">
+                    <Zap size={19} />
+                  </span>
+                  <span>
+                    <strong>Today's power failures</strong>
+                    <small>Check latest power issues</small>
+                  </span>
+                  <ChevronRight size={16} />
+                </button>
+
+                <button>
+                  <span className="assistant-action-icon">
+                    <Cpu size={19} />
+                  </span>
+                  <span>
+                    <strong>Active devices</strong>
+                    <small>How many devices are online?</small>
+                  </span>
+                  <ChevronRight size={16} />
+                </button>
+
+                <button>
+                  <span className="assistant-action-icon">
+                    <Activity size={19} />
+                  </span>
+                  <span>
+                    <strong>Recent motor events</strong>
+                    <small>View motor activity logs</small>
+                  </span>
+                  <ChevronRight size={16} />
+                </button>
+
+                <button>
+                  <span className="assistant-action-icon">
+                    <Leaf size={19} />
+                  </span>
+                  <span>
+                    <strong>Farm statistics</strong>
+                    <small>Get overall farm insights</small>
+                  </span>
+                  <ChevronRight size={16} />
+                </button>
+
+                <button>
+                  <span className="assistant-action-icon">
+                    <FileBarChart size={19} />
+                  </span>
+                  <span>
+                    <strong>Generate report</strong>
+                    <small>Create a custom report</small>
+                  </span>
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+
+              <div className="assistant-or">
+                <span />
+                <strong>OR ASK ANYTHING</strong>
+                <span />
+              </div>
+
+              <div className="assistant-prompts">
+                <button>“Show water yield for this month”</button>
+                <button>“Which motor is offline?”</button>
+                <button>“Compare this month with last month”</button>
+                <button>“Show all alerts”</button>
+              </div>
+
+              <div className="assistant-input">
+                <div className="assistant-input-field">
+                  <Zap size={17} />
+                  <input
+                    type="text"
+                    placeholder="Ask me anything..."
+                  />
+                  <button aria-label="Additional options">
+                    <ClipboardList size={17} />
+                  </button>
+                </div>
+
+                <button className="assistant-send" aria-label="Send">
+                  <Search size={19} />
+                </button>
+              </div>
+
+              <div className="assistant-hint">
+                <span>💡</span>
+                <p>
+                  Try asking about devices, motors, water yield, alerts, or
+                  reports.
+                </p>
+              </div>
             </div>
           </div>
         )}
@@ -697,6 +824,7 @@ useEffect(() => {
 }
 
 export default App;
+
 
 
 

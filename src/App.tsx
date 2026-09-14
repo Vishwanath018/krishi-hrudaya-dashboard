@@ -1,6 +1,8 @@
 ﻿import { useState } from "react";
 import {
   Activity,
+  BarChart3,
+  MapPin,
   Bell,
   CalendarDays,
   CheckCircle2,
@@ -337,19 +339,20 @@ function App() {
                   ))}
                 </div>
 
-                <section className="panel statistics-panel">
-                  <div className="panel-header">
+                <section className="panel statistics-panel premium-statistics">
+                  <div className="panel-header premium-panel-header">
                     <div>
                       <span className="panel-kicker">ANALYTICS</span>
                       <h3>Product Statistics</h3>
                     </div>
+
                     <button className="period-button">
                       This Month <ChevronDown size={15} />
                     </button>
                   </div>
 
-                  <div className="product-metrics">
-                    <div className="product-metric assigned">
+                  <div className="product-metrics premium-metrics">
+                    <div className="product-metric assigned premium-metric">
                       <div className="product-metric-icon">
                         <Package size={17} />
                       </div>
@@ -359,7 +362,7 @@ function App() {
                       </div>
                     </div>
 
-                    <div className="product-metric total">
+                    <div className="product-metric total premium-metric">
                       <div className="product-metric-icon">
                         <Package size={17} />
                       </div>
@@ -369,7 +372,7 @@ function App() {
                       </div>
                     </div>
 
-                    <div className="product-metric passed">
+                    <div className="product-metric passed premium-metric">
                       <div className="product-metric-icon">
                         <CheckCircle2 size={17} />
                       </div>
@@ -379,7 +382,7 @@ function App() {
                       </div>
                     </div>
 
-                    <div className="product-metric failed">
+                    <div className="product-metric failed premium-metric">
                       <div className="product-metric-icon">
                         <XCircle size={17} />
                       </div>
@@ -390,112 +393,191 @@ function App() {
                     </div>
                   </div>
 
-                  <div className="chart-container">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={chartData}
-                          cx="50%"
-                          cy="45%"
-                          innerRadius="58%"
-                          outerRadius="78%"
-                          paddingAngle={2}
-                          dataKey="value"
-                          strokeWidth={0}
-                        >
-                          {chartData.map((_, index) => (
-                            <Cell
-                              key={index}
-                              fill={chartColors[index]}
-                            />
-                          ))}
-                        </Pie>
+                  <div className="premium-donut-stage">
+                    <div className="premium-donut">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={chartData}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius="61%"
+                            outerRadius="82%"
+                            paddingAngle={2}
+                            dataKey="value"
+                            strokeWidth={0}
+                          >
+                            {chartData.map((_, index) => (
+                              <Cell
+                                key={index}
+                                fill={chartColors[index]}
+                              />
+                            ))}
+                          </Pie>
+                          <Tooltip />
+                        </PieChart>
+                      </ResponsiveContainer>
 
-                        <Tooltip />
+                      <div className="premium-donut-center">
+                        <strong>3,687</strong>
+                        <span>Total Products</span>
+                      </div>
+                    </div>
 
-                        <Legend
-                          verticalAlign="bottom"
-                          height={35}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
+                    <div className="donut-callout passed">
+                      <i />
+                      <div>
+                        <span>Test Passed</span>
+                        <strong>3,573 <small>96.9%</small></strong>
+                      </div>
+                    </div>
 
-                    <div className="chart-center">
-                      <strong>3,687</strong>
-                      <span>Total Products</span>
+                    <div className="donut-callout total">
+                      <i />
+                      <div>
+                        <span>Total Products</span>
+                        <strong>3,687 <small>100%</small></strong>
+                      </div>
+                    </div>
+
+                    <div className="donut-callout assigned">
+                      <i />
+                      <div>
+                        <span>Assigned Products</span>
+                        <strong>1,683 <small>45.6%</small></strong>
+                      </div>
+                    </div>
+
+                    <div className="donut-callout failed">
+                      <i />
+                      <div>
+                        <span>Test Failed</span>
+                        <strong>6 <small>0.2%</small></strong>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="product-overview">
-                    <div className="overview-heading">
-                      <span>PRODUCT OVERVIEW</span>
-                      <strong>Testing & Assignment Status</strong>
+                  <div className="premium-legend clean-legend">
+
+                    <div className="legend-item assigned">
+                      <span className="legend-dot" />
+                      <div className="legend-content">
+                        <span className="legend-name">Assigned Products</span>
+                        <strong>1,683</strong>
+                        <small>45.6%</small>
+                      </div>
                     </div>
 
-                    <div className="overview-item">
+                    <div className="legend-item failed">
+                      <span className="legend-dot" />
+                      <div className="legend-content">
+                        <span className="legend-name">Test Failed</span>
+                        <strong>6</strong>
+                        <small>0.2%</small>
+                      </div>
+                    </div>
+
+                    <div className="legend-item passed">
+                      <span className="legend-dot" />
+                      <div className="legend-content">
+                        <span className="legend-name">Test Passed</span>
+                        <strong>3,573</strong>
+                        <small>96.9%</small>
+                      </div>
+                    </div>
+
+                    <div className="legend-item total">
+                      <span className="legend-dot" />
+                      <div className="legend-content">
+                        <span className="legend-name">Total Products</span>
+                        <strong>3,687</strong>
+                        <small>100%</small>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div className="product-overview premium-overview">
+                    <div className="overview-heading premium-overview-heading">
+                      <div>
+                        <span>PRODUCT OVERVIEW</span>
+                        <strong>Testing & Assignment Status</strong>
+                      </div>
+
+                      <div className="overall-status">
+                        <Activity size={14} />
+                        <span>Overall Testing Progress</span>
+                        <strong>96.9%</strong>
+                      </div>
+                    </div>
+
+                    <div className="overview-item premium-overview-item">
                       <div>
                         <span>Assigned Products</span>
                         <strong>1,683</strong>
                       </div>
-
                       <div className="overview-bar warning">
-                        <i style={{ width: "45.6%" }} />
+                        <i style={{width:"45.6%"}} />
                       </div>
-
                       <small>45.6%</small>
                     </div>
 
-                    <div className="overview-item">
+                    <div className="overview-item premium-overview-item">
                       <div>
                         <span>Total Products</span>
                         <strong>3,687</strong>
                       </div>
-
                       <div className="overview-bar">
-                        <i style={{ width: "100%" }} />
+                        <i style={{width:"100%"}} />
                       </div>
-
                       <small>100%</small>
                     </div>
 
-                    <div className="overview-item">
+                    <div className="overview-item premium-overview-item">
                       <div>
                         <span>Test Passed</span>
                         <strong>3,573</strong>
                       </div>
-
                       <div className="overview-bar success">
-                        <i style={{ width: "96.9%" }} />
+                        <i style={{width:"96.9%"}} />
                       </div>
-
                       <small>96.9%</small>
                     </div>
 
-                    <div className="overview-item">
+                    <div className="overview-item premium-overview-item">
                       <div>
                         <span>Test Failed</span>
                         <strong>6</strong>
                       </div>
-
                       <div className="overview-bar danger">
-                        <i style={{ width: "8%" }} />
+                        <i style={{width:"8%"}} />
                       </div>
-
                       <small>0.2%</small>
                     </div>
                   </div>
 
-                  <div className="product-insights">
-                    <div>
-                      <span>TOP CATEGORY</span>
-                      <strong>Water Pumps</strong>
-                      <small>1,245 products</small>
+                  <div className="product-insights premium-insights">
+                    <div className="premium-insight category">
+                      <div className="insight-visual">
+                        <BarChart3 size={21} />
+                      </div>
+                      <div className="insight-copy">
+                        <span>TOP CATEGORY</span>
+                        <strong>Water Pumps</strong>
+                        <small>1,245 products</small>
+                      </div>
+                      <ChevronRight size={17} className="insight-arrow" />
                     </div>
 
-                    <div>
-                      <span>ACTIVE LOCATION</span>
-                      <strong>Rammurthy Nagar</strong>
-                      <small>892 products</small>
+                    <div className="premium-insight location">
+                      <div className="insight-visual">
+                        <MapPin size={21} />
+                      </div>
+                      <div className="insight-copy">
+                        <span>ACTIVE LOCATION</span>
+                        <strong className="location-name">Rammurthy Nagar</strong>
+                        <small>892 products</small>
+                      </div>
+                      <ChevronRight size={17} className="insight-arrow" />
                     </div>
                   </div>
                 </section>
@@ -626,6 +708,10 @@ function App() {
 }
 
 export default App;
+
+
+
+
 
 
 

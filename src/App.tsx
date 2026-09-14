@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Activity,
   Bell,
@@ -82,7 +82,7 @@ const activities = [
 ];
 
 const notifications = [
-  ["Power failure detected", "Ward 26 Å“ Rammurthy Nagara", "2 mins ago", Bell, "danger"],
+  ["Power failure detected", "Ward 26 œ Rammurthy Nagara", "2 mins ago", Bell, "danger"],
   ["Test completed", "Farm ID: 1024", "12 mins ago", CheckCircle2, "success"],
   ["New device registered", "Device ID: KH-4582", "1 hour ago", Cpu, "blue"]
 ];
@@ -126,59 +126,73 @@ useEffect(() => {
   return (
     <div className={`app ${darkMode ? "dark" : ""}`}>
       <aside className={`sidebar ${sidebarOpen ? "open" : "collapsed"}`}>
-        <div className="brand"><img src="/KH.png" alt="Krishi Hrudaya" /></div><div className="sidebar-divider" />
-        <div className="menu-label">{sidebarOpen ? "MENU" : "•"}</div>
+  <div className="sidebar-top">
+    <div className="brand">
+      <img src="/KH.png" alt="Krishi Hrudaya" />
+    </div>
 
-        <nav className="sidebar-nav">
-          {menuItems.map(([label, Icon]) => (
-            <button
-              key={label}
-              className={`nav-item ${activeMenu === label ? "active" : ""}`}
-              onClick={() => setActiveMenu(label)}
-              title={label}
-            >
-              <Icon size={20} />
-              {sidebarOpen && <span>{label}</span>}
-            </button>
-          ))}
-        </nav>
+    <button
+      className="collapse-button"
+      onClick={() => setSidebarOpen(!sidebarOpen)}
+      title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+    >
+      {sidebarOpen ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
+      {sidebarOpen && "Collapse"}
+    </button>
+  </div>
 
-        <div className="menu-label permission-label">
-          {sidebarOpen ? "PERMISSION" : "•"}
-        </div>
+  <div className="sidebar-divider" />
 
-        <nav className="sidebar-nav">
-          {permissionItems.map(([label, Icon]) => (
-            <button
-              key={label}
-              className={`nav-item ${activeMenu === label ? "active" : ""}`}
-              onClick={() => setActiveMenu(label)}
-              title={label}
-            >
-              <Icon size={20} />
-              {sidebarOpen && <span>{label}</span>}
-            </button>
-          ))}
-        </nav>
+  <div className="menu-label">
+    {sidebarOpen ? "MENU" : "�"}
+  </div>
 
-        {sidebarOpen && (
-          <div className="sidebar-card">
-            
-            <div>
-              <strong>Growing Smarter</strong>
-              <span>Farms Together</span>
-            </div>
-          </div>
-        )}
+  <nav className="sidebar-nav">
+    {menuItems.map(([label, Icon]) => (
+      <button
+        key={label}
+        className={`nav-item ${activeMenu === label ? "active" : ""}`}
+        onClick={() => setActiveMenu(label)}
+        title={label}
+      >
+        <Icon size={20} />
+        {sidebarOpen && <span>{label}</span>}
+      </button>
+    ))}
+  </nav>
 
-        <button
-          className="collapse-button"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-        >
-          {sidebarOpen ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
-          {sidebarOpen && "Collapse"}
-        </button>
-      </aside>
+  <div className="menu-label permission-label">
+    {sidebarOpen ? "PERMISSION" : "�"}
+  </div>
+
+  <nav className="sidebar-nav">
+    {permissionItems.map(([label, Icon]) => (
+      <button
+        key={label}
+        className={`nav-item ${activeMenu === label ? "active" : ""}`}
+        onClick={() => setActiveMenu(label)}
+        title={label}
+      >
+        <Icon size={20} />
+        {sidebarOpen && <span>{label}</span>}
+      </button>
+    ))}
+  </nav>
+
+  {sidebarOpen && (
+    <div className="sidebar-card">
+      <div>
+        <strong>Growing Smarter</strong>
+        <span>Farms Together</span>
+      </div>
+    </div>
+  )}
+
+  <button className="sidebar-logout" title="Logout">
+    <LockKeyhole size={19} />
+    {sidebarOpen && <span>Logout</span>}
+  </button>
+</aside>
 
       <main className="main">
         <header className="topbar">
@@ -631,7 +645,7 @@ useEffect(() => {
                   <div className="feature-icon cyan"><Droplets size={24} /></div>
                   <div>
                     <strong>Efficient Resource Use</strong>
-                    <span>Water, energy and crops Å“ optimized.</span>
+                    <span>Water, energy and crops œ optimized.</span>
                   </div>
                   <button><ChevronRight size={18} /></button>
                 </div>

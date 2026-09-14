@@ -2582,3 +2582,69 @@ button {
     padding: 12px 10px;
   }
 }
+
+.hero-image-carousel {
+  position: relative;
+  display: block;
+  min-height: 175px;
+  height: 175px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.hero-carousel-images {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-carousel-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+  pointer-events: none;
+}
+
+.hero-carousel-image.active {
+  opacity: 1;
+}
+
+.hero-carousel-dots {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hero-carousel-dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.hero-carousel-dot.active {
+  width: 18px;
+  border-radius: 5px;
+  background: #ffffff;
+}
+
+@media (max-width: 700px) {
+  .hero-image-carousel {
+    min-height: 150px;
+    height: 150px;
+  }
+}

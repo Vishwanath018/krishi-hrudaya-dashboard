@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+﻿import { useEffect, useState } from "react";
 import {
   Activity,
   Bell,
@@ -107,6 +107,15 @@ const permissionItems = [
 const chartColors = ["#3b82f6", "#10b981", "#ef4444", "#f59e0b"];
 
 function App() {
+  const [heroSlide, setHeroSlide] = useState(0);
+
+useEffect(() => {
+  const interval = window.setInterval(() => {
+    setHeroSlide((current) => (current + 1) % 3);
+  }, 2500);
+
+  return () => window.clearInterval(interval);
+}, []);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -280,38 +289,32 @@ function App() {
 
           {activeMenu === "Dashboard" ? (
             <>
-              <section className="hero">
-                <div className="hero-content">
-                  <span className="hero-eyebrow">
-                    
-                    Smart Farming Platform
-                  </span>
-                  <h2>Welcome back, Admin!</h2>
-                  <p>
-                    Monitor, manage and empower farms with smarter technology.
-                  </p>
-                  <div className="hero-tags">
-                    <span> Healthy Farms</span>
-                    <span><Activity size={15} /> Stronger Communities</span>
-                    <span><Zap size={15} /> Sustainable Tomorrow</span>
-                  </div>
-                </div>
-                <div className="hero-visual">
-                  <div className="sun" />
-                  <div className="mountain mountain-one" />
-                  <div className="mountain mountain-two" />
-                  <div className="field field-one" />
-                  <div className="field field-two" />
-                  <div className="farm-house">
-                    <div className="roof" />
-                    <div className="house" />
-                  </div>
-                  <div className="tree tree-one" />
-                  <div className="tree tree-two" />
-                </div>
-              </section>
+              <section className="hero hero-image-carousel">
+  <div className="hero-carousel-images">
+    {["/hk1.png", "/hk2.png", "/hk3.png"].map((image, index) => (
+      <img
+        key={image}
+        src={image}
+        alt=""
+        className={`hero-carousel-image ${heroSlide === index ? "active" : ""}`}
+      />
+    ))}
+  </div>
 
-              <section className="dashboard-grid">
+  <div className="hero-carousel-dots">
+    {[0, 1, 2].map((index) => (
+      <button
+        key={index}
+        type="button"
+        className={`hero-carousel-dot ${heroSlide === index ? "active" : ""}`}
+        onClick={() => setHeroSlide(index)}
+        aria-label={`Show slide ${index + 1}`}
+      />
+    ))}
+  </div>
+</section>
+
+<section className="dashboard-grid">
                 <div className="stats-grid">
                   {stats.map(([title, value, Icon, type]) => (
                     <div className={`stat-card ${type}`} key={title}>
@@ -686,6 +689,7 @@ function App() {
 }
 
 export default App;
+
 
 
 

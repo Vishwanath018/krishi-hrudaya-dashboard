@@ -352,8 +352,14 @@ useEffect(() => {
                         {title === "User Permissions" && <><span>Active Permissions</span><span>Utilization</span></>}
                         {title === "Enquiries" && <><span>3 New Today</span><span>Activity</span></>}
                       </div>
-                      <div className="stat-card-visual">
-                        {title === "Test Failed" ? <div className="stat-warning-line"><span /></div> : <div className="stat-progress"><span /></div>}
+                      <div className={`stat-card-visual ${title === "Total Users" || title === "Total Farms" ? "stat-trend" : title === "Total Borewells" ? "stat-status" : title === "User Permissions" ? "stat-permissions" : title === "Enquiries" ? "stat-activity" : title === "Test Failed" ? "stat-warning" : "stat-progress-wrap"}`}>
+                        {title === "Total Users" && <><span /><span /><span /><span /><span /></>}
+                        {title === "Total Farms" && <><span /><span /><span /><span /><span /></>}
+                        {title === "Total Borewells" && <><span /><span /><span /><span /></>}
+                        {title === "User Permissions" && <><span /><span /><span /><span /><span /></>}
+                        {title === "Enquiries" && <><span /><span /><span /></>}
+                        {title === "Test Failed" && <div className="stat-warning-line"><span /></div>}
+                        {!["Total Users", "Total Farms", "Total Borewells", "User Permissions", "Enquiries", "Test Failed"].includes(title) && <div className="stat-progress"><span /></div>}
                       </div>
                     </div>
                   ))}
@@ -842,6 +848,7 @@ useEffect(() => {
 }
 
 export default App;
+
 
 
 

@@ -4200,3 +4200,144 @@ button {
 .red .stat-progress span {
   width: 42%;
 }
+.stat-progress-wrap {
+  margin-top: 7px;
+}
+
+.stat-progress {
+  height: 4px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #edf2f6;
+}
+
+.stat-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #183f58;
+}
+
+.yellow .stat-progress span,
+.amber .stat-progress span {
+  background: #f59e0b;
+}
+
+.purple .stat-progress span {
+  background: #7c3aed;
+}
+
+.green .stat-progress span,
+.success .stat-progress span {
+  background: #16a34a;
+}
+
+.indigo .stat-progress span {
+  background: #4f46e5;
+}
+
+.sky .stat-progress span {
+  background: #0284c7;
+}
+
+.stat-trend {
+  height: 7px;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  margin-top: 7px;
+}
+
+.stat-trend span {
+  flex: 1;
+  height: 100%;
+  border-radius: 3px 3px 1px 1px;
+  background: #2563eb;
+}
+
+.stat-trend span:nth-child(1) {
+  height: 30%;
+}
+
+.stat-trend span:nth-child(2) {
+  height: 45%;
+}
+
+.stat-trend span:nth-child(3) {
+  height: 55%;
+}
+
+.stat-trend span:nth-child(4) {
+  height: 72%;
+}
+
+.stat-trend span:nth-child(5) {
+  height: 95%;
+}
+
+.green .stat-trend span {
+  background: #16a34a;
+}
+
+.stat-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 7px;
+}
+
+.stat-status span {
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: #16a34a;
+}
+
+.stat-permissions {
+  display: flex;
+  gap: 4px;
+  margin-top: 7px;
+}
+
+.stat-permissions span {
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: #f59e0b;
+}
+
+.stat-activity {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 7px;
+}
+
+.stat-activity span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #0284c7;
+  box-shadow: 0 0 0 3px #e0f2fe;
+}
+
+.stat-warning {
+  margin-top: 7px;
+}
+
+.stat-warning-line {
+  height: 4px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #fee2e2;
+}
+
+.stat-warning-line span {
+  display: block;
+  width: 24%;
+  height: 100%;
+  border-radius: inherit;
+  background: #ef4444;
+}

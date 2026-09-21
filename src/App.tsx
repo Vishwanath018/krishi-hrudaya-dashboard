@@ -1,4 +1,5 @@
 ﻿import { useEffect, useState } from "react";
+import jsPDF from "jspdf";
 import {
   Activity,
   Bell,
@@ -36,7 +37,14 @@ import {
   Legend,
   Pie,
   PieChart,
+  Bar,
+  CartesianGrid,
+  ComposedChart,
+  Line,
   ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
 
 const stats: [string, string, any, string][] = [
@@ -122,6 +130,106 @@ useEffect(() => {
   const [activeMenu, setActiveMenu] = useState("Dashboard");
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [reportDivision, setReportDivision] = useState("All Divisions");
+  const [reportStatus, setReportStatus] = useState("All Status");
+  const [reportPeriod, setReportPeriod] = useState("This Month");
+  const [mapMode, setMapMode] = useState("Satellite");
+  const [mapZoom, setMapZoom] = useState(1);
+
+  const reportDivisions = [
+    { name: "Division 1", total: 569, active: 450, inactive: 119 },
+    { name: "Division 2", total: 1108, active: 791, inactive: 317 }
+  ];
+
+  const waterReportData = [
+    { name: "ON Cycle", water: 540, cycles: 70 },
+    { name: "OFF Cycle", water: 728, cycles: 166 },
+    { name: "Overload Trip", water: 4547, cycles: 340.78 },
+    { name: "Unload Trip", water: 22007, cycles: 220 }
+  ];
+
+  const selectedDivisions =
+    reportDivision === "All Divisions"
+      ? reportDivisions
+      : reportDivisions.filter((item) => item.name === reportDivision);
+
+  const filteredInstallations = selectedDivisions.reduce(
+    (result, item) => {
+      const active = reportStatus === "Inactive" ? 0 : item.active;
+      const inactive = reportStatus === "Active" ? 0 : item.inactive;
+      return {
+        total: active + inactive,
+        active: result.active + active,
+        inactive: result.inactive + inactive
+      };
+    },
+    { total: 0, active: 0, inactive: 0 }
+  );
+
+  const selectedDivisionNames = selectedDivisions.map((item) => item.name).join(", ");
+
+  const downloadReport = () => {
+    const doc = new jsPDF();
+    const activePercentage = filteredInstallations.total
+      ? ((filteredInstallations.active / filteredInstallations.total) * 100).toFixed(1)
+      : "0.0";
+    const inactivePercentage = filteredInstallations.total
+      ? ((filteredInstallations.inactive / filteredInstallations.total) * 100).toFixed(1)
+      : "0.0";
+
+    doc.setFontSize(20);
+    doc.text("Krishi Hrudaya", 20, 22);
+    doc.setFontSize(14);
+    doc.text("Division Report", 20, 32);
+
+    doc.setFontSize(10);
+    doc.text(`Period: ${reportPeriod}`, 20, 43);
+    doc.text(`Division: ${selectedDivisionNames}`, 20, 50);
+    doc.text(`Status Filter: ${reportStatus}`, 20, 57);
+
+    doc.setFontSize(13);
+    doc.text("Division Map & Administration", 20, 72);
+    doc.setFontSize(10);
+    doc.text("Divisions: 2", 25, 82);
+    doc.text("Sub Divisions: 6", 25, 89);
+    doc.text("Total Constituencies: 34", 25, 96);
+    doc.text("Total Wards: 213", 25, 103);
+    doc.text("Total Officials: 26", 25, 110);
+    doc.text("Total Users: 880", 25, 117);
+
+    doc.setFontSize(13);
+    doc.text("Installation Hierarchy", 20, 132);
+    doc.setFontSize(10);
+    doc.text(`Total Installations: ${filteredInstallations.total.toLocaleString()}`, 25, 142);
+    doc.text(`Active Installations: ${filteredInstallations.active.toLocaleString()} (${activePercentage}%)`, 25, 149);
+    doc.text(`Inactive Installations: ${filteredInstallations.inactive.toLocaleString()} (${inactivePercentage}%)`, 25, 156);
+
+    let y = 168;
+    selectedDivisions.forEach((item) => {
+      const active = reportStatus === "Inactive" ? 0 : item.active;
+      const inactive = reportStatus === "Active" ? 0 : item.inactive;
+      doc.text(`${item.name}: ${active + inactive} installations`, 25, y);
+      y += 7;
+      doc.text(`Active: ${active} | Inactive: ${inactive}`, 35, y);
+      y += 9;
+    });
+
+    doc.setFontSize(13);
+    doc.text("Water Yield vs ON/OFF Cycle and Trips", 20, y + 8);
+    doc.setFontSize(10);
+    y += 18;
+
+    waterReportData.forEach((item) => {
+      doc.text(`${item.name}: ${item.water.toLocaleString()} | ${item.cycles}`, 25, y);
+      y += 8;
+    });
+
+    doc.text(`Total Active Installations: ${filteredInstallations.active.toLocaleString()}`, 20, y + 8);
+    doc.text(`Total Inactive Installations: ${filteredInstallations.inactive.toLocaleString()}`, 20, y + 16);
+
+    doc.save("krishi-hrudaya-division-report.pdf");
+  };
+
 
   return (
     <div className={`app ${darkMode ? "dark" : ""}`}>
@@ -648,6 +756,51 @@ useEffect(() => {
             </>
           ) : activeMenu === "Reports" ? (
             <section className="division-report-page">
+              <div className="report-filter-bar">
+                <div className="report-filter-heading">
+                  <div>
+                    <span>REPORTS</span>
+                    <h1>Division Report</h1>
+                  </div>
+                  <small>Device distribution, installations and water activity</small>
+                </div>
+
+                <div className="report-filters">
+                  <label>
+                    <span>Division</span>
+                    <select value={reportDivision} onChange={(e) => setReportDivision(e.target.value)}>
+                      <option>All Divisions</option>
+                      {reportDivisions.map((item) => (
+                        <option key={item.name}>{item.name}</option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label>
+                    <span>Status</span>
+                    <select value={reportStatus} onChange={(e) => setReportStatus(e.target.value)}>
+                      <option>All Status</option>
+                      <option>Active</option>
+                      <option>Inactive</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    <span>Period</span>
+                    <select value={reportPeriod} onChange={(e) => setReportPeriod(e.target.value)}>
+                      <option>This Month</option>
+                      <option>Last Month</option>
+                      <option>All Time</option>
+                    </select>
+                  </label>
+
+                  <button className="report-filter-download" onClick={downloadReport}>
+                    <Download size={18} />
+                    Download
+                  </button>
+                </div>
+              </div>
+
               <div className="division-report-top">
                 <div className="division-map-panel">
                   <div className="division-map-header">
@@ -662,40 +815,52 @@ useEffect(() => {
                     </div>
 
                     <div className="map-mode-buttons">
-                      <button className="active">Satellite</button>
-                      <button>Street</button>
-                      <button>Terrain</button>
+                      {["Satellite", "Street", "Terrain"].map((mode) => (
+                        <button
+                          key={mode}
+                          className={mapMode === mode ? "active" : ""}
+                          onClick={() => setMapMode(mode)}
+                        >
+                          {mode}
+                        </button>
+                      ))}
                     </div>
                   </div>
 
-                  <div className="division-map">
-                    <div className="map-grid-lines" />
+                  <div className={`division-map map-mode-${mapMode.toLowerCase()}`}>
+                    <div
+                      className="map-interactive-layer"
+                      style={{ transform: `scale(${mapZoom})` }}
+                    >
+                      <div className="map-grid-lines" />
 
-                    <div className="map-region region-one">
-                      <span>Division: North</span>
-                      <strong>Population: 123,843</strong>
-                      <small>Officials: 5</small>
+                      <div className="map-region region-one">
+                        <span>Division 1</span>
+                        <strong>569 Installations</strong>
+                        <small>450 Active ? 119 Inactive</small>
+                      </div>
+
+                      <div className="map-region region-two">
+                        <span>Division 2</span>
+                        <strong>1,108 Installations</strong>
+                        <small>791 Active ? 317 Inactive</small>
+                      </div>
+
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((marker) => (
+                        <button
+                          key={marker}
+                          className={`map-marker m${marker}`}
+                          onClick={() =>
+                            setReportDivision(marker <= 5 ? "Division 1" : "Division 2")
+                          }
+                          title={marker <= 5 ? "Division 1" : "Division 2"}
+                        />
+                      ))}
+
+                      <div className="map-heat heat-one">569</div>
+                      <div className="map-heat heat-two">1,108</div>
+                      <div className="map-heat heat-three">1,680</div>
                     </div>
-
-                    <div className="map-region region-two">
-                      <span>Division: North</span>
-                      <strong>Population: 2,496</strong>
-                    </div>
-
-                    <div className="map-heat heat-one">200</div>
-                    <div className="map-heat heat-two">26</div>
-                    <div className="map-heat heat-three">26</div>
-
-                    <span className="map-marker m1" />
-                    <span className="map-marker m2" />
-                    <span className="map-marker m3" />
-                    <span className="map-marker m4" />
-                    <span className="map-marker m5" />
-                    <span className="map-marker m6" />
-                    <span className="map-marker m7" />
-                    <span className="map-marker m8" />
-                    <span className="map-marker m9" />
-                    <span className="map-marker m10" />
 
                     <div className="map-legend">
                       <strong>Map Legend</strong>
@@ -703,62 +868,53 @@ useEffect(() => {
                       <span><i className="legend-cyan" /> SUB-DIVISIONS</span>
                       <span><i className="legend-purple" /> CONSTITUENCIES</span>
                       <span><i className="legend-orange" /> WARDS</span>
-                      <em>???????? Administrative Boundary</em>
-                      <em>???????? Boundary</em>
                     </div>
 
                     <div className="map-controls">
-                      <button>+</button>
-                      <button>?</button>
+                      <button onClick={() => setMapZoom((value) => Math.min(1.5, value + 0.1))}>+</button>
+                      <button onClick={() => setMapZoom((value) => Math.max(0.8, value - 0.1))}>?</button>
+                      <button onClick={() => setMapZoom(1)}>Reset</button>
+                    </div>
+
+                    <div className="map-selection">
+                      Showing: <strong>{reportDivision}</strong>
                     </div>
                   </div>
                 </div>
 
                 <div className="division-report-stats">
                   <div className="division-stat-card blue">
-                    <div className="division-stat-icon">
-                      <Grid2X2 size={34} />
-                    </div>
+                    <div className="division-stat-icon"><Grid2X2 size={34} /></div>
                     <strong>2</strong>
                     <span>Divisions</span>
                   </div>
 
                   <div className="division-stat-card green">
-                    <div className="division-stat-icon">
-                      <Users size={34} />
-                    </div>
+                    <div className="division-stat-icon"><Users size={34} /></div>
                     <strong>6</strong>
                     <span>Sub Divisions</span>
                   </div>
 
                   <div className="division-stat-card orange">
-                    <div className="division-stat-icon">
-                      <ClipboardList size={34} />
-                    </div>
+                    <div className="division-stat-icon"><ClipboardList size={34} /></div>
                     <strong>34</strong>
                     <span>Total Constituencies</span>
                   </div>
 
                   <div className="division-stat-card purple">
-                    <div className="division-stat-icon">
-                      <Users size={34} />
-                    </div>
+                    <div className="division-stat-icon"><Users size={34} /></div>
                     <strong>213</strong>
                     <span>Total Wards</span>
                   </div>
 
                   <div className="division-stat-card cyan">
-                    <div className="division-stat-icon">
-                      <CircleUserRound size={34} />
-                    </div>
+                    <div className="division-stat-icon"><CircleUserRound size={34} /></div>
                     <strong>26</strong>
                     <span>Total Officials</span>
                   </div>
 
                   <div className="division-stat-card red">
-                    <div className="division-stat-icon">
-                      <Users size={34} />
-                    </div>
+                    <div className="division-stat-icon"><Users size={34} /></div>
                     <strong>880</strong>
                     <span>Total Users</span>
                   </div>
@@ -782,101 +938,70 @@ useEffect(() => {
                       <Settings2 size={25} />
                     </div>
                     <div>
-                      <span>Total Installations</span>
-                      <strong>1,680</strong>
+                      <span>Filtered Installations</span>
+                      <strong>{filteredInstallations.total.toLocaleString()}</strong>
                     </div>
                   </div>
 
                   <div className="hierarchy-line" />
 
                   <div className="division-installations">
-                    <div className="division-install-card division-one">
-                      <div className="division-install-header">
-                        <div className="division-install-icon">
-                          <Grid2X2 size={28} />
-                        </div>
-                        <div>
-                          <span>Division 1</span>
-                          <strong>569</strong>
-                          <small>Installations</small>
-                        </div>
-                      </div>
+                    {selectedDivisions.map((division) => {
+                      const active = reportStatus === "Inactive" ? 0 : division.active;
+                      const inactive = reportStatus === "Active" ? 0 : division.inactive;
+                      const total = active + inactive;
+                      const percentage = total ? (active / total) * 100 : 0;
 
-                      <div className="installation-status-box">
-                        <h4>Installation Status</h4>
-
-                        <div className="status-content">
-                          <div className="status-donut">
-                            <div className="donut-green" />
-                            <div className="donut-label">
-                              <strong>450</strong>
-                              <span>79.1%</span>
+                      return (
+                        <div className="division-install-card" key={division.name}>
+                          <div className="division-install-header">
+                            <div className="division-install-icon">
+                              <Grid2X2 size={28} />
+                            </div>
+                            <div>
+                              <span>{division.name}</span>
+                              <strong>{total.toLocaleString()}</strong>
+                              <small>Installations</small>
                             </div>
                           </div>
 
-                          <div className="status-legend">
-                            <div>
-                              <i className="active-dot" />
-                              <span>
-                                <strong>Active</strong>
-                                450 (79.1%)
-                              </span>
-                            </div>
-                            <div>
-                              <i className="inactive-dot" />
-                              <span>
-                                <strong>Inactive</strong>
-                                119 (20.9%)
-                              </span>
+                          <div className="installation-status-box">
+                            <h4>Installation Status</h4>
+
+                            <div className="status-content">
+                              <div
+                                className="status-donut"
+                                style={{
+                                  background: `conic-gradient(#10b981 ${percentage}%, #dbe4ef ${percentage}% 100%)`
+                                }}
+                              >
+                                <div className="donut-label">
+                                  <strong>{active.toLocaleString()}</strong>
+                                  <span>{percentage.toFixed(1)}%</span>
+                                </div>
+                              </div>
+
+                              <div className="status-legend">
+                                <div>
+                                  <i className="active-dot" />
+                                  <span>
+                                    <strong>Active</strong>
+                                    {active.toLocaleString()} ({percentage.toFixed(1)}%)
+                                  </span>
+                                </div>
+                                <div>
+                                  <i className="inactive-dot" />
+                                  <span>
+                                    <strong>Inactive</strong>
+                                    {inactive.toLocaleString()} ({total ? ((inactive / total) * 100).toFixed(1) : "0.0"}%)
+                                  </span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-
-                    <div className="division-install-card division-two">
-                      <div className="division-install-header">
-                        <div className="division-install-icon">
-                          <Grid2X2 size={28} />
-                        </div>
-                        <div>
-                          <span>Division 2</span>
-                          <strong>1,108</strong>
-                          <small>Installations</small>
-                        </div>
-                      </div>
-
-                      <div className="installation-status-box">
-                        <h4>Installation Status</h4>
-
-                        <div className="status-content">
-                          <div className="status-donut second">
-                            <div className="donut-green" />
-                            <div className="donut-label">
-                              <strong>791</strong>
-                              <span>71.4%</span>
-                            </div>
-                          </div>
-
-                          <div className="status-legend">
-                            <div>
-                              <i className="active-dot" />
-                              <span>
-                                <strong>Active</strong>
-                                791 (71.4%)
-                              </span>
-                            </div>
-                            <div>
-                              <i className="inactive-dot" />
-                              <span>
-                                <strong>Inactive</strong>
-                                317 (28.6%)
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                      );
+                    })}
                   </div>
                 </section>
 
@@ -886,74 +1011,24 @@ useEffect(() => {
                       <Activity size={28} />
                       <div>
                         <h2>Water Yield vs ON/OFF Cycle and Trips</h2>
+                        <span>{reportPeriod} ? {reportDivision}</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="water-chart">
-                    <div className="water-axis-left">
-                      <span>25,000</span>
-                      <span>20,000</span>
-                      <span>15,000</span>
-                      <span>10,000</span>
-                      <span>5,000</span>
-                      <span>0</span>
-                    </div>
-
-                    <div className="water-plot">
-                      <div className="water-grid-line line1" />
-                      <div className="water-grid-line line2" />
-                      <div className="water-grid-line line3" />
-                      <div className="water-grid-line line4" />
-                      <div className="water-grid-line line5" />
-
-                      <div className="water-bars">
-                        <div className="water-column">
-                          <strong>540</strong>
-                          <div className="water-bar" style={{ height: "8%" }} />
-                          <span>ON Cycle</span>
-                        </div>
-
-                        <div className="water-column">
-                          <strong>728</strong>
-                          <div className="water-bar" style={{ height: "10%" }} />
-                          <span>OFF Cycle</span>
-                        </div>
-
-                        <div className="water-column">
-                          <strong>4,547</strong>
-                          <div className="water-bar" style={{ height: "25%" }} />
-                          <span>Overload Trip</span>
-                        </div>
-
-                        <div className="water-column">
-                          <strong>22,007</strong>
-                          <div className="water-bar tall" style={{ height: "82%" }} />
-                          <span>Unload Trip</span>
-                        </div>
-                      </div>
-
-                      <div className="cycle-line">
-                        <span className="cycle-point point-one">70</span>
-                        <span className="cycle-point point-two">166</span>
-                        <span className="cycle-point point-three">340.78</span>
-                        <span className="cycle-point point-four">220</span>
-                      </div>
-                    </div>
-
-                    <div className="water-axis-right">
-                      <span>250</span>
-                      <span>200</span>
-                      <span>150</span>
-                      <span>100</span>
-                      <span>50</span>
-                      <span>0</span>
-                    </div>
-                  </div>
-
-                  <div className="water-chart-legend">
-                    <span><i className="water-blue-dot" /> Water Yield (L)</span>
-                    <span><i className="cycle-green-dot" /> Cycles / Trips (Count)</span>
+                  <div className="water-recharts">
+                    <ResponsiveContainer width="100%" height={310}>
+                      <ComposedChart data={waterReportData}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                        <XAxis dataKey="name" />
+                        <YAxis yAxisId="water" />
+                        <YAxis yAxisId="cycles" orientation="right" />
+                        <Tooltip />
+                        <Legend />
+                        <Bar yAxisId="water" dataKey="water" name="Water Yield (L)" fill="#3b82f6" radius={[8, 8, 0, 0]} />
+                        <Line yAxisId="cycles" type="monotone" dataKey="cycles" name="Cycles / Trips" stroke="#10b981" strokeWidth={3} dot={{ r: 5 }} />
+                      </ComposedChart>
+                    </ResponsiveContainer>
                   </div>
                 </section>
               </div>
@@ -968,7 +1043,14 @@ useEffect(() => {
                   <i />
                   <div>
                     <span>Total Active Installations</span>
-                    <strong>1,241 <small>(73.9%)</small></strong>
+                    <strong>
+                      {filteredInstallations.active.toLocaleString()}
+                      <small>
+                        ({filteredInstallations.total
+                          ? ((filteredInstallations.active / filteredInstallations.total) * 100).toFixed(1)
+                          : "0.0"}%)
+                      </small>
+                    </strong>
                   </div>
                 </div>
 
@@ -978,11 +1060,18 @@ useEffect(() => {
                   <i />
                   <div>
                     <span>Total Inactive Installations</span>
-                    <strong>436 <small>(26.1%)</small></strong>
+                    <strong>
+                      {filteredInstallations.inactive.toLocaleString()}
+                      <small>
+                        ({filteredInstallations.total
+                          ? ((filteredInstallations.inactive / filteredInstallations.total) * 100).toFixed(1)
+                          : "0.0"}%)
+                      </small>
+                    </strong>
                   </div>
                 </div>
 
-                <button className="download-report-button">
+                <button className="download-report-button" onClick={downloadReport}>
                   <Download size={22} />
                   <span>Download Report</span>
                 </button>

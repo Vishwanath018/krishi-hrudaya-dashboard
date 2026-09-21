@@ -326,20 +326,38 @@ useEffect(() => {
                 <div className="stats-grid">
                   {stats.map(([title, value, Icon, type]) => (
                     <div className={`stat-card ${type}`} key={title}>
-                      <div className="stat-icon">
-                        <Icon size={24} />
+                      <div className="stat-card-top">
+                        <div className="stat-card-heading">
+                          <div className="stat-icon">
+                            <Icon size={19} />
+                          </div>
+                          <span>{title}</span>
+                        </div>
+                        <div className="stat-arrow">
+                          <ChevronRight size={16} />
+                        </div>
                       </div>
-                      <div className="stat-info">
-                        <span>{title}</span>
+                      <div className="stat-card-main">
                         <strong>{value}</strong>
                       </div>
-                      <div className="stat-arrow">
-                        <ChevronRight size={17} />
+                      <div className="stat-card-support">
+                        {title === "Total Products" && <><span>1,683 Assigned</span><span>45.6%</span></>}
+                        {title === "Active Devices" && <><span>97.1% Operational</span><span>Operational</span></>}
+                        {title === "Total Farms" && <><span>+18 This Month</span><span>Trend</span></>}
+                        {title === "Total Borewells" && <><span>Connected / Active</span><span>Active</span></>}
+                        {title === "Total Installations" && <><span>98.4% Completed</span><span>98.4%</span></>}
+                        {title === "Test Passed" && <><span>97.2% Pass Rate</span><span>97.2%</span></>}
+                        {title === "Test Failed" && <><span>Requires Attention</span><span>Warning</span></>}
+                        {title === "Total Users" && <><span>+12.4% This Month</span><span>Growth</span></>}
+                        {title === "User Permissions" && <><span>Active Permissions</span><span>Utilization</span></>}
+                        {title === "Enquiries" && <><span>3 New Today</span><span>Activity</span></>}
+                      </div>
+                      <div className="stat-card-visual">
+                        {title === "Test Failed" ? <div className="stat-warning-line"><span /></div> : <div className="stat-progress"><span /></div>}
                       </div>
                     </div>
                   ))}
                 </div>
-
                 <section className="panel statistics-panel">
                   <div className="panel-header">
                     <div>
@@ -824,6 +842,7 @@ useEffect(() => {
 }
 
 export default App;
+
 
 
 

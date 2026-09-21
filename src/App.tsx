@@ -130,6 +130,139 @@ useEffect(() => {
   const [activeMenu, setActiveMenu] = useState("Dashboard");
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [assistantInput, setAssistantInput] = useState("");
+  const [assistantMessages, setAssistantMessages] = useState<
+    { role: "user" | "assistant"; text: string }[]
+  >([]);
+
+  const assistantData = {
+    users: 880,
+    products: 3687,
+    activeDevices: 3578,
+    farms: 256,
+    borewells: 3578,
+    installations: 3578,
+    testPassed: 3573,
+    testFailed: 6,
+    permissions: 1621,
+    enquiries: 5,
+    division1Installations: 569,
+    division1Active: 450,
+    division1Inactive: 119,
+    division2Installations: 1108,
+    division2Active: 791,
+    division2Inactive: 317,
+    totalReportInstallations: 1680,
+    activeReportInstallations: 1241,
+    inactiveReportInstallations: 436
+  };
+
+  const getAssistantResponse = (question: string) => {
+    const q = question.toLowerCase().trim();
+
+    if (!q) {
+      return "Please ask me something about the dashboard or reports.";
+    }
+
+    if (q.includes("failed test") || q.includes("test failed")) {
+      return `There are ${assistantData.testFailed} failed tests currently shown on the dashboard. ${assistantData.testPassed.toLocaleString()} tests have passed.`;
+    }
+
+    if (q.includes("active device") || q.includes("online device")) {
+      return `There are ${assistantData.activeDevices.toLocaleString()} active devices shown on the dashboard.`;
+    }
+
+    if (q.includes("user")) {
+      return `There are ${assistantData.users.toLocaleString()} users currently shown on the dashboard.`;
+    }
+
+    if (q.includes("product")) {
+      return `The dashboard shows ${assistantData.products.toLocaleString()} total products, including 1,683 assigned products.`;
+    }
+
+    if (q.includes("farm")) {
+      return `There are ${assistantData.farms.toLocaleString()} farms shown on the dashboard.`;
+    }
+
+    if (q.includes("borewell")) {
+      return `The dashboard currently shows ${assistantData.borewells.toLocaleString()} borewells.`;
+    }
+
+    if (q.includes("permission")) {
+      return `There are ${assistantData.permissions.toLocaleString()} user permissions shown on the dashboard.`;
+    }
+
+    if (q.includes("enquir")) {
+      return `There are ${assistantData.enquiries} enquiries currently shown on the dashboard.`;
+    }
+
+    if (q.includes("division 1")) {
+      return `Division 1 has ${assistantData.division1Installations} installations: ${assistantData.division1Active} active and ${assistantData.division1Inactive} inactive.`;
+    }
+
+    if (q.includes("division 2")) {
+      return `Division 2 has ${assistantData.division2Installations.toLocaleString()} installations: ${assistantData.division2Active} active and ${assistantData.division2Inactive} inactive.`;
+    }
+
+    if (q.includes("installation")) {
+      return `The Reports page contains ${assistantData.totalReportInstallations.toLocaleString()} installations. ${assistantData.activeReportInstallations.toLocaleString()} are active and ${assistantData.inactiveReportInstallations.toLocaleString()} are inactive.`;
+    }
+
+    if (
+      q.includes("division") ||
+      q.includes("sub division") ||
+      q.includes("subdivision") ||
+      q.includes("constituenc") ||
+      q.includes("ward") ||
+      q.includes("official")
+    ) {
+      return "The Reports page currently shows 2 divisions, 6 sub-divisions, 34 constituencies, 213 wards, and 26 officials.";
+    }
+
+    if (q.includes("motor") || q.includes("recent event") || q.includes("activity")) {
+      return "The latest displayed motor activities are a motor stopped in MANUAL mode at 09:36 PM and a motor stopped in REMOTE COMMAND mode at 09:31 PM.";
+    }
+
+    if (q.includes("water")) {
+      return "The Reports page displays Water Yield against ON Cycle, OFF Cycle, Overload Trip, and Unload Trip. The displayed values are 540, 728, 4,547, and 22,007 respectively.";
+    }
+
+    if (q.includes("on cycle") || q.includes("off cycle") || q.includes("overload") || q.includes("unload")) {
+      return "The displayed report values are ON Cycle: 540 with 70 cycles, OFF Cycle: 728 with 166 cycles, Overload Trip: 4,547 with 340.78 cycles/trips, and Unload Trip: 22,007 with 220 cycles/trips.";
+    }
+
+    if (q.includes("dashboard") || q.includes("statistics") || q.includes("stats")) {
+      return `The dashboard currently shows ${assistantData.users} users, ${assistantData.products.toLocaleString()} products, ${assistantData.activeDevices.toLocaleString()} active devices, ${assistantData.farms} farms, ${assistantData.borewells.toLocaleString()} borewells, and ${assistantData.installations.toLocaleString()} installations.`;
+    }
+
+    if (q.includes("hello") || q.includes("hi") || q.includes("hey")) {
+      return "Hello! I can answer questions using the Dashboard and Reports data currently displayed in Krishi Hrudaya.";
+    }
+
+    return "I can answer questions about the Dashboard and Reports data currently available in this application. Try asking about users, products, active devices, farms, installations, failed tests, divisions, water yield, or recent motor activity.";
+  };
+
+  const askAssistant = (question: string) => {
+    const trimmedQuestion = question.trim();
+
+    if (!trimmedQuestion) {
+      return;
+    }
+
+    const answer = getAssistantResponse(trimmedQuestion);
+
+    setAssistantMessages((messages) => [
+      ...messages,
+      { role: "user", text: trimmedQuestion },
+      { role: "assistant", text: answer }
+    ]);
+
+    setAssistantInput("");
+  };
+
+  const runAssistantAction = (question: string) => {
+    askAssistant(question);
+  };
   const [reportDivision, setReportDivision] = useState("All Divisions");
   const [reportStatus, setReportStatus] = useState("All Status");
   const [reportPeriod, setReportPeriod] = useState("This Month");
@@ -1130,6 +1263,19 @@ useEffect(() => {
             </div>
 
             <div className="assistant-body">
+              {assistantMessages.length > 0 && (
+                <div className="assistant-messages">
+                  {assistantMessages.map((message, index) => (
+                    <div
+                      key={`${message.role}-${index}`}
+                      className={`assistant-message ${message.role}`}
+                    >
+                      <span>{message.text}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               <div className="assistant-welcome">
                 <div className="assistant-bot-icon">
                   <MessageSquare size={21} />
@@ -1236,14 +1382,28 @@ useEffect(() => {
                   <Zap size={17} />
                   <input
                     type="text"
+                    value={assistantInput}
+                    onChange={(e) => setAssistantInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        askAssistant(assistantInput);
+                      }
+                    }}
                     placeholder="Ask me anything..."
                   />
-                  <button aria-label="Additional options">
+                  <button
+                    aria-label="Additional options"
+                    onClick={() => runAssistantAction("Show dashboard statistics")}
+                  >
                     <ClipboardList size={17} />
                   </button>
                 </div>
 
-                <button className="assistant-send" aria-label="Send">
+                <button
+                  className="assistant-send"
+                  aria-label="Send"
+                  onClick={() => askAssistant(assistantInput)}
+                >
                   <Search size={19} />
                 </button>
               </div>

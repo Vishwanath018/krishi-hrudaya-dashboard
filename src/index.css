@@ -4913,3 +4913,41 @@ button {
   font-size: 8.5px;
   white-space: nowrap;
 }
+.activities-panel .activities-list {
+  gap: 12px;
+}
+
+.activities-panel .activity-item {
+  padding: 14px;
+}
+
+.activities-panel .activity-title-row {
+  margin-bottom: 8px;
+}
+
+.activities-panel .activity-title-row strong {
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.activities-panel .activity-data-row {
+  gap: 7px;
+  margin-top: 7px;
+}
+
+.activities-panel .activity-data-box {
+  padding: 7px 9px;
+  font-size: 9px;
+  line-height: 1.25;
+  border-radius: 7px;
+}
+
+.activities-panel .activity-extra-row .activity-data-box {
+  flex: 1;
+  min-width: 0;
+}
+
+.activities-panel .activity-meta {
+  margin-top: 10px;
+  font-size: 8px;
+}

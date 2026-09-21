@@ -3824,3 +3824,258 @@ button {
   height: 34px !important;
 }
 
+
+.kpi-pipeline {
+  margin-bottom: 22px;
+  padding: 22px;
+  border: 1px solid #d8e4ec;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 6px 20px rgba(18, 47, 72, 0.045);
+}
+
+.kpi-pipeline-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.kpi-pipeline-header span,
+.kpi-pipeline-section-title span {
+  color: #5f7890;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.kpi-pipeline-header h2 {
+  margin: 4px 0 5px;
+  color: #12385a;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.kpi-pipeline-header p {
+  margin: 0;
+  color: #71879a;
+  font-size: 12px;
+}
+
+.kpi-pipeline-section {
+  margin-top: 18px;
+}
+
+.kpi-pipeline-section-title {
+  margin-bottom: 10px;
+}
+
+.kpi-pipeline-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kpi-pipeline-node {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kpi-pipeline-card {
+  min-width: 0;
+  flex: 1;
+  min-height: 112px;
+  padding: 15px;
+  border: 1px solid #dbe6ed;
+  border-radius: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  background: #f9fbfc;
+  box-sizing: border-box;
+}
+
+.kpi-pipeline-icon {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+}
+
+.kpi-pipeline-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.kpi-pipeline-content span,
+.kpi-pipeline-content strong,
+.kpi-pipeline-content small {
+  display: block;
+}
+
+.kpi-pipeline-content span {
+  color: #5d7488;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.kpi-pipeline-content strong {
+  margin-top: 5px;
+  color: #12385a;
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.kpi-pipeline-content small {
+  margin-top: 7px;
+  color: #8294a3;
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+.kpi-pipeline-card button {
+  width: 27px;
+  height: 27px;
+  flex: 0 0 27px;
+  margin-left: auto;
+  border: 1px solid #d5e1e9;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #668095;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.kpi-pipeline-arrow {
+  flex: 0 0 auto;
+  color: #8ba0b0;
+  display: grid;
+  place-items: center;
+}
+
+.kpi-pipeline-card.green {
+  background: #f0f8f2;
+  border-color: #d4e9d8;
+}
+
+.kpi-pipeline-card.green .kpi-pipeline-icon {
+  background: #dcefe0;
+  color: #438755;
+}
+
+.kpi-pipeline-card.blue {
+  background: #f0f6fc;
+  border-color: #d5e3f1;
+}
+
+.kpi-pipeline-card.blue .kpi-pipeline-icon {
+  background: #dceafa;
+  color: #3975ad;
+}
+
+.kpi-pipeline-card.indigo {
+  background: #f1f3fb;
+  border-color: #d9dcef;
+}
+
+.kpi-pipeline-card.indigo .kpi-pipeline-icon {
+  background: #e0e3f7;
+  color: #5969ad;
+}
+
+.kpi-pipeline-card.purple {
+  background: #f5f1fb;
+  border-color: #e2d9ef;
+}
+
+.kpi-pipeline-card.purple .kpi-pipeline-icon {
+  background: #e8ddf5;
+  color: #7956a3;
+}
+
+.kpi-pipeline-card.amber,
+.kpi-pipeline-card.yellow {
+  background: #fff8eb;
+  border-color: #f0e0be;
+}
+
+.kpi-pipeline-card.amber .kpi-pipeline-icon,
+.kpi-pipeline-card.yellow .kpi-pipeline-icon {
+  background: #ffedc9;
+  color: #a87822;
+}
+
+.kpi-pipeline-card.success {
+  background: #eff9f1;
+  border-color: #d3e9d7;
+}
+
+.kpi-pipeline-card.success .kpi-pipeline-icon {
+  background: #dcefe0;
+  color: #3f8a55;
+}
+
+.kpi-pipeline-card.danger {
+  background: #fff2f1;
+  border-color: #efd8d6;
+}
+
+.kpi-pipeline-card.danger .kpi-pipeline-icon {
+  background: #f8dfdd;
+  color: #bd5c55;
+}
+
+.kpi-pipeline-card.sky {
+  background: #eff8fb;
+  border-color: #d5e8ee;
+}
+
+.kpi-pipeline-card.sky .kpi-pipeline-icon {
+  background: #dceff4;
+  color: #36839a;
+}
+
+.kpi-pipeline-outcome,
+.kpi-pipeline-admin {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.kpi-pipeline-admin {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 1250px) {
+  .kpi-pipeline-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kpi-pipeline-arrow {
+    display: none;
+  }
+
+  .kpi-pipeline-admin {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .kpi-pipeline {
+    padding: 16px;
+  }
+
+  .kpi-pipeline-row,
+  .kpi-pipeline-outcome,
+  .kpi-pipeline-admin {
+    grid-template-columns: 1fr;
+  }
+}

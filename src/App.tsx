@@ -425,9 +425,6 @@ useEffect(() => {
                             />
                           ))}
                         </Pie>
-
-                        <Tooltip />
-
                         <Legend
                           verticalAlign="bottom"
                           height={35}
@@ -441,65 +438,53 @@ useEffect(() => {
                     </div>
                   </div>
 
-                  <div className="product-overview">
-                    <div className="overview-heading">
-                      <span>PRODUCT OVERVIEW</span>
-                      <strong>Testing & Assignment Status</strong>
+                  <div className="product-status">
+                    <div className="product-status-header">
+                      <div>
+                        <span>PRODUCT OVERVIEW</span>
+                        <strong>Testing & Assignment Status</strong>
+                      </div>
+                      <span className="product-status-live">LIVE</span>
                     </div>
 
-                    <div className="overview-item">
-                      <div>
-                        <span>Assigned Products</span>
-                        <strong>1,683</strong>
+                    <div className="product-status-grid">
+                      <div className="product-status-item assigned">
+                        <div className="product-status-icon">A</div>
+                        <div>
+                          <span>Assigned</span>
+                          <strong>1,683</strong>
+                        </div>
+                        <small>45.6%</small>
                       </div>
 
-                      <div className="overview-bar warning">
-                        <i style={{ width: "45.6%" }} />
+                      <div className="product-status-item total">
+                        <div className="product-status-icon">P</div>
+                        <div>
+                          <span>Total Products</span>
+                          <strong>3,687</strong>
+                        </div>
+                        <small>100%</small>
                       </div>
 
-                      <small>45.6%</small>
-                    </div>
-
-                    <div className="overview-item">
-                      <div>
-                        <span>Total Products</span>
-                        <strong>3,687</strong>
+                      <div className="product-status-item passed">
+                        <div className="product-status-icon">✓</div>
+                        <div>
+                          <span>Test Passed</span>
+                          <strong>3,573</strong>
+                        </div>
+                        <small>97.2%</small>
                       </div>
 
-                      <div className="overview-bar">
-                        <i style={{ width: "100%" }} />
+                      <div className="product-status-item failed">
+                        <div className="product-status-icon">!</div>
+                        <div>
+                          <span>Test Failed</span>
+                          <strong>6</strong>
+                        </div>
+                        <small>0.2%</small>
                       </div>
-
-                      <small>100%</small>
-                    </div>
-
-                    <div className="overview-item">
-                      <div>
-                        <span>Test Passed</span>
-                        <strong>3,573</strong>
-                      </div>
-
-                      <div className="overview-bar success">
-                        <i style={{ width: "96.9%" }} />
-                      </div>
-
-                      <small>96.9%</small>
-                    </div>
-
-                    <div className="overview-item">
-                      <div>
-                        <span>Test Failed</span>
-                        <strong>6</strong>
-                      </div>
-
-                      <div className="overview-bar danger">
-                        <i style={{ width: "8%" }} />
-                      </div>
-
-                      <small>0.2%</small>
                     </div>
                   </div>
-
                 </section>
                 <section className="panel activities-panel">
                   <div className="panel-header">
@@ -848,6 +833,7 @@ useEffect(() => {
 }
 
 export default App;
+
 
 
 

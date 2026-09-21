@@ -11,6 +11,7 @@ import {
   ClipboardList,
   Cpu,
   Droplets,
+  Download,
   FileBarChart,
   Grid2X2,
   Leaf,
@@ -36,10 +37,9 @@ import {
   Pie,
   PieChart,
   ResponsiveContainer,
-  Tooltip
 } from "recharts";
 
-const stats = [
+const stats: [string, string, any, string][] = [
   ["Total Users", "880", Users, "blue"],
   ["Total Products", "3,687", Package, "yellow"],
   ["Active Devices", "3,578", Cpu, "purple"],
@@ -81,13 +81,13 @@ const activities = [
   }
 ];
 
-const notifications = [
+const notifications: [string, string, string, any, string][] = [
   ["Power failure detected", "Ward 26 Å“ Rammurthy Nagara", "2 mins ago", Bell, "danger"],
   ["Test completed", "Farm ID: 1024", "12 mins ago", CheckCircle2, "success"],
   ["New device registered", "Device ID: KH-4582", "1 hour ago", Cpu, "blue"]
 ];
 
-const menuItems = [
+const menuItems: [string, any][] = [
   ["Dashboard", Grid2X2],
   ["Categories", ClipboardList],
   ["Products", Package],
@@ -98,7 +98,7 @@ const menuItems = [
   ["Reports", FileBarChart]
 ];
 
-const permissionItems = [
+const permissionItems: [string, any][] = [
   ["Manage Users", UserCog],
   ["Manage Role", ShieldCheck],
   ["Manage Permission", LockKeyhole]
@@ -396,7 +396,7 @@ useEffect(() => {
                               (outerRadius - innerRadius) *
                                 (index === 1 ? 0.35 : 0.55);
 
-                            const radians = -midAngle * (Math.PI / 180);
+                            const radians = -(midAngle ?? 0) * (Math.PI / 180);
                             const x = cx + radius * Math.cos(radians);
                             const y = cy + radius * Math.sin(radians);
 
@@ -646,7 +646,349 @@ useEffect(() => {
                 </div>
               </section>
             </>
-          ) : (
+          ) : activeMenu === "Reports" ? (
+            <section className="division-report-page">
+              <div className="division-report-top">
+                <div className="division-map-panel">
+                  <div className="division-map-header">
+                    <div className="division-map-title">
+                      <div className="division-map-pin">
+                        <Droplets size={24} />
+                      </div>
+                      <div>
+                        <h2>Division Map</h2>
+                        <span>Device Distribution (North)</span>
+                      </div>
+                    </div>
+
+                    <div className="map-mode-buttons">
+                      <button className="active">Satellite</button>
+                      <button>Street</button>
+                      <button>Terrain</button>
+                    </div>
+                  </div>
+
+                  <div className="division-map">
+                    <div className="map-grid-lines" />
+
+                    <div className="map-region region-one">
+                      <span>Division: North</span>
+                      <strong>Population: 123,843</strong>
+                      <small>Officials: 5</small>
+                    </div>
+
+                    <div className="map-region region-two">
+                      <span>Division: North</span>
+                      <strong>Population: 2,496</strong>
+                    </div>
+
+                    <div className="map-heat heat-one">200</div>
+                    <div className="map-heat heat-two">26</div>
+                    <div className="map-heat heat-three">26</div>
+
+                    <span className="map-marker m1" />
+                    <span className="map-marker m2" />
+                    <span className="map-marker m3" />
+                    <span className="map-marker m4" />
+                    <span className="map-marker m5" />
+                    <span className="map-marker m6" />
+                    <span className="map-marker m7" />
+                    <span className="map-marker m8" />
+                    <span className="map-marker m9" />
+                    <span className="map-marker m10" />
+
+                    <div className="map-legend">
+                      <strong>Map Legend</strong>
+                      <span><i className="legend-blue" /> DIVISIONS</span>
+                      <span><i className="legend-cyan" /> SUB-DIVISIONS</span>
+                      <span><i className="legend-purple" /> CONSTITUENCIES</span>
+                      <span><i className="legend-orange" /> WARDS</span>
+                      <em>???????? Administrative Boundary</em>
+                      <em>???????? Boundary</em>
+                    </div>
+
+                    <div className="map-controls">
+                      <button>+</button>
+                      <button>?</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="division-report-stats">
+                  <div className="division-stat-card blue">
+                    <div className="division-stat-icon">
+                      <Grid2X2 size={34} />
+                    </div>
+                    <strong>2</strong>
+                    <span>Divisions</span>
+                  </div>
+
+                  <div className="division-stat-card green">
+                    <div className="division-stat-icon">
+                      <Users size={34} />
+                    </div>
+                    <strong>6</strong>
+                    <span>Sub Divisions</span>
+                  </div>
+
+                  <div className="division-stat-card orange">
+                    <div className="division-stat-icon">
+                      <ClipboardList size={34} />
+                    </div>
+                    <strong>34</strong>
+                    <span>Total Constituencies</span>
+                  </div>
+
+                  <div className="division-stat-card purple">
+                    <div className="division-stat-icon">
+                      <Users size={34} />
+                    </div>
+                    <strong>213</strong>
+                    <span>Total Wards</span>
+                  </div>
+
+                  <div className="division-stat-card cyan">
+                    <div className="division-stat-icon">
+                      <CircleUserRound size={34} />
+                    </div>
+                    <strong>26</strong>
+                    <span>Total Officials</span>
+                  </div>
+
+                  <div className="division-stat-card red">
+                    <div className="division-stat-icon">
+                      <Users size={34} />
+                    </div>
+                    <strong>880</strong>
+                    <span>Total Users</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="division-report-middle">
+                <section className="installation-hierarchy-panel">
+                  <div className="division-report-section-title">
+                    <div>
+                      <Settings2 size={27} />
+                      <div>
+                        <h2>Installation Hierarchy</h2>
+                        <span>Total installations with division-wise and status-wise breakdown</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="installation-total">
+                    <div className="installation-total-icon">
+                      <Settings2 size={25} />
+                    </div>
+                    <div>
+                      <span>Total Installations</span>
+                      <strong>1,680</strong>
+                    </div>
+                  </div>
+
+                  <div className="hierarchy-line" />
+
+                  <div className="division-installations">
+                    <div className="division-install-card division-one">
+                      <div className="division-install-header">
+                        <div className="division-install-icon">
+                          <Grid2X2 size={28} />
+                        </div>
+                        <div>
+                          <span>Division 1</span>
+                          <strong>569</strong>
+                          <small>Installations</small>
+                        </div>
+                      </div>
+
+                      <div className="installation-status-box">
+                        <h4>Installation Status</h4>
+
+                        <div className="status-content">
+                          <div className="status-donut">
+                            <div className="donut-green" />
+                            <div className="donut-label">
+                              <strong>450</strong>
+                              <span>79.1%</span>
+                            </div>
+                          </div>
+
+                          <div className="status-legend">
+                            <div>
+                              <i className="active-dot" />
+                              <span>
+                                <strong>Active</strong>
+                                450 (79.1%)
+                              </span>
+                            </div>
+                            <div>
+                              <i className="inactive-dot" />
+                              <span>
+                                <strong>Inactive</strong>
+                                119 (20.9%)
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="division-install-card division-two">
+                      <div className="division-install-header">
+                        <div className="division-install-icon">
+                          <Grid2X2 size={28} />
+                        </div>
+                        <div>
+                          <span>Division 2</span>
+                          <strong>1,108</strong>
+                          <small>Installations</small>
+                        </div>
+                      </div>
+
+                      <div className="installation-status-box">
+                        <h4>Installation Status</h4>
+
+                        <div className="status-content">
+                          <div className="status-donut second">
+                            <div className="donut-green" />
+                            <div className="donut-label">
+                              <strong>791</strong>
+                              <span>71.4%</span>
+                            </div>
+                          </div>
+
+                          <div className="status-legend">
+                            <div>
+                              <i className="active-dot" />
+                              <span>
+                                <strong>Active</strong>
+                                791 (71.4%)
+                              </span>
+                            </div>
+                            <div>
+                              <i className="inactive-dot" />
+                              <span>
+                                <strong>Inactive</strong>
+                                317 (28.6%)
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section className="water-yield-panel">
+                  <div className="division-report-section-title">
+                    <div>
+                      <Activity size={28} />
+                      <div>
+                        <h2>Water Yield vs ON/OFF Cycle and Trips</h2>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="water-chart">
+                    <div className="water-axis-left">
+                      <span>25,000</span>
+                      <span>20,000</span>
+                      <span>15,000</span>
+                      <span>10,000</span>
+                      <span>5,000</span>
+                      <span>0</span>
+                    </div>
+
+                    <div className="water-plot">
+                      <div className="water-grid-line line1" />
+                      <div className="water-grid-line line2" />
+                      <div className="water-grid-line line3" />
+                      <div className="water-grid-line line4" />
+                      <div className="water-grid-line line5" />
+
+                      <div className="water-bars">
+                        <div className="water-column">
+                          <strong>540</strong>
+                          <div className="water-bar" style={{ height: "8%" }} />
+                          <span>ON Cycle</span>
+                        </div>
+
+                        <div className="water-column">
+                          <strong>728</strong>
+                          <div className="water-bar" style={{ height: "10%" }} />
+                          <span>OFF Cycle</span>
+                        </div>
+
+                        <div className="water-column">
+                          <strong>4,547</strong>
+                          <div className="water-bar" style={{ height: "25%" }} />
+                          <span>Overload Trip</span>
+                        </div>
+
+                        <div className="water-column">
+                          <strong>22,007</strong>
+                          <div className="water-bar tall" style={{ height: "82%" }} />
+                          <span>Unload Trip</span>
+                        </div>
+                      </div>
+
+                      <div className="cycle-line">
+                        <span className="cycle-point point-one">70</span>
+                        <span className="cycle-point point-two">166</span>
+                        <span className="cycle-point point-three">340.78</span>
+                        <span className="cycle-point point-four">220</span>
+                      </div>
+                    </div>
+
+                    <div className="water-axis-right">
+                      <span>250</span>
+                      <span>200</span>
+                      <span>150</span>
+                      <span>100</span>
+                      <span>50</span>
+                      <span>0</span>
+                    </div>
+                  </div>
+
+                  <div className="water-chart-legend">
+                    <span><i className="water-blue-dot" /> Water Yield (L)</span>
+                    <span><i className="cycle-green-dot" /> Cycles / Trips (Count)</span>
+                  </div>
+                </section>
+              </div>
+
+              <div className="installation-summary-panel">
+                <div className="summary-title">
+                  <Activity size={29} />
+                  <strong>Installation Summary</strong>
+                </div>
+
+                <div className="summary-metric active">
+                  <i />
+                  <div>
+                    <span>Total Active Installations</span>
+                    <strong>1,241 <small>(73.9%)</small></strong>
+                  </div>
+                </div>
+
+                <div className="summary-divider" />
+
+                <div className="summary-metric inactive">
+                  <i />
+                  <div>
+                    <span>Total Inactive Installations</span>
+                    <strong>436 <small>(26.1%)</small></strong>
+                  </div>
+                </div>
+
+                <button className="download-report-button">
+                  <Download size={22} />
+                  <span>Download Report</span>
+                </button>
+              </div>
+            </section>
+                    ) : (
             <div className="coming-page">
               <div className="coming-icon">
                 <Settings2 size={38} />

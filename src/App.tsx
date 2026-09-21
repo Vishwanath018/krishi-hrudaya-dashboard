@@ -138,6 +138,7 @@ useEffect(() => {
   const assistantData = {
     users: 880,
     products: 3687,
+    assignedProducts: 1683,
     activeDevices: 3578,
     farms: 256,
     borewells: 3578,
@@ -146,6 +147,11 @@ useEffect(() => {
     testFailed: 6,
     permissions: 1621,
     enquiries: 5,
+    divisions: 2,
+    subDivisions: 6,
+    constituencies: 34,
+    wards: 213,
+    officials: 26,
     division1Installations: 569,
     division1Active: 450,
     division1Inactive: 119,
@@ -157,89 +163,413 @@ useEffect(() => {
     inactiveReportInstallations: 436
   };
 
+  const normalizeAssistantQuestion = (question: string) =>
+    question
+      .toLowerCase()
+      .replace(/[?,.!]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
   const getAssistantResponse = (question: string) => {
-    const q = question.toLowerCase().trim();
+    const q = normalizeAssistantQuestion(question);
+    const previousQuestion =
+      assistantMessages.length > 0
+        ? normalizeAssistantQuestion(
+            [...assistantMessages]
+              .reverse()
+              .find((message) => message.role === "user")?.text || ""
+          )
+        : "";
+
+    const totalWater =
+      waterReportData.reduce((total, item) => total + item.water, 0);
+
+    const totalCycles =
+      waterReportData.reduce((total, item) => total + item.cycles, 0);
+
+    const highestWaterCategory = waterReportData.reduce(
+      (highest, item) => (item.water > highest.water ? item : highest),
+      waterReportData[0]
+    );
+
+    const dashboardSummary =
+      `Dashboard Summary\n\n` +
+      `Users: ${assistantData.users.toLocaleString()}\n` +
+      `Products: ${assistantData.products.toLocaleString()}\n` +
+      `Assigned Products: ${assistantData.assignedProducts.toLocaleString()}\n` +
+      `Active Devices: ${assistantData.activeDevices.toLocaleString()}\n` +
+      `Farms: ${assistantData.farms.toLocaleString()}\n` +
+      `Borewells: ${assistantData.borewells.toLocaleString()}\n` +
+      `Installations: ${assistantData.installations.toLocaleString()}\n` +
+      `Tests Passed: ${assistantData.testPassed.toLocaleString()}\n` +
+      `Tests Failed: ${assistantData.testFailed.toLocaleString()}\n` +
+      `User Permissions: ${assistantData.permissions.toLocaleString()}\n` +
+      `Enquiries: ${assistantData.enquiries.toLocaleString()}`;
 
     if (!q) {
-      return "Please ask me something about the dashboard or reports.";
-    }
-
-    if (q.includes("failed test") || q.includes("test failed")) {
-      return `There are ${assistantData.testFailed} failed tests currently shown on the dashboard. ${assistantData.testPassed.toLocaleString()} tests have passed.`;
-    }
-
-    if (q.includes("active device") || q.includes("online device")) {
-      return `There are ${assistantData.activeDevices.toLocaleString()} active devices shown on the dashboard.`;
-    }
-
-    if (q.includes("user")) {
-      return `There are ${assistantData.users.toLocaleString()} users currently shown on the dashboard.`;
-    }
-
-    if (q.includes("product")) {
-      return `The dashboard shows ${assistantData.products.toLocaleString()} total products, including 1,683 assigned products.`;
-    }
-
-    if (q.includes("farm")) {
-      return `There are ${assistantData.farms.toLocaleString()} farms shown on the dashboard.`;
-    }
-
-    if (q.includes("borewell")) {
-      return `The dashboard currently shows ${assistantData.borewells.toLocaleString()} borewells.`;
-    }
-
-    if (q.includes("permission")) {
-      return `There are ${assistantData.permissions.toLocaleString()} user permissions shown on the dashboard.`;
-    }
-
-    if (q.includes("enquir")) {
-      return `There are ${assistantData.enquiries} enquiries currently shown on the dashboard.`;
-    }
-
-    if (q.includes("division 1")) {
-      return `Division 1 has ${assistantData.division1Installations} installations: ${assistantData.division1Active} active and ${assistantData.division1Inactive} inactive.`;
-    }
-
-    if (q.includes("division 2")) {
-      return `Division 2 has ${assistantData.division2Installations.toLocaleString()} installations: ${assistantData.division2Active} active and ${assistantData.division2Inactive} inactive.`;
-    }
-
-    if (q.includes("installation")) {
-      return `The Reports page contains ${assistantData.totalReportInstallations.toLocaleString()} installations. ${assistantData.activeReportInstallations.toLocaleString()} are active and ${assistantData.inactiveReportInstallations.toLocaleString()} are inactive.`;
+      return "Please ask me something about the Dashboard or Reports.";
     }
 
     if (
-      q.includes("division") ||
+      q === "hi" ||
+      q === "hello" ||
+      q === "hey" ||
+      q.includes("good morning") ||
+      q.includes("good afternoon") ||
+      q.includes("good evening")
+    ) {
+      return "Hello! I can answer questions using the Dashboard and Reports data currently displayed in Krishi Hrudaya.";
+    }
+
+    if (
+      q.includes("complete dashboard") ||
+      q.includes("dashboard summary") ||
+      q.includes("full dashboard") ||
+      q.includes("all dashboard") ||
+      q === "dashboard"
+    ) {
+      return dashboardSummary;
+    }
+
+    if (
+      q.includes("active device") ||
+      q.includes("online device") ||
+      q.includes("how many devices") ||
+      q.includes("device count") ||
+      q.includes("number of devices")
+    ) {
+      return `There are ${assistantData.activeDevices.toLocaleString()} active devices shown on the Dashboard.`;
+    }
+
+    if (
+      q.includes("failed test") ||
+      q.includes("test failed") ||
+      q.includes("tests failed")
+    ) {
+      return `${assistantData.testFailed} tests are currently shown as failed. ${assistantData.testPassed.toLocaleString()} tests are shown as passed.`;
+    }
+
+    if (
+      q.includes("passed test") ||
+      q.includes("test passed") ||
+      q.includes("tests passed") ||
+      q.includes("pass rate")
+    ) {
+      return `${assistantData.testPassed.toLocaleString()} tests are shown as passed and ${assistantData.testFailed} as failed.`;
+    }
+
+    if (
+      q.includes("assigned product") ||
+      q.includes("assigned products")
+    ) {
+      return `The Dashboard shows ${assistantData.assignedProducts.toLocaleString()} assigned products out of ${assistantData.products.toLocaleString()} total products.`;
+    }
+
+    if (
+      q.includes("product") ||
+      q.includes("products")
+    ) {
+      return `The Dashboard shows ${assistantData.products.toLocaleString()} total products, including ${assistantData.assignedProducts.toLocaleString()} assigned products.`;
+    }
+
+    if (
+      q.includes("user permission") ||
+      q.includes("permissions")
+    ) {
+      return `There are ${assistantData.permissions.toLocaleString()} user permissions shown on the Dashboard.`;
+    }
+
+    if (
+      q.includes("user") ||
+      q.includes("users")
+    ) {
+      return `There are ${assistantData.users.toLocaleString()} users currently shown on the Dashboard.`;
+    }
+
+    if (
+      q.includes("farm") ||
+      q.includes("farms")
+    ) {
+      return `There are ${assistantData.farms.toLocaleString()} farms shown on the Dashboard.`;
+    }
+
+    if (
+      q.includes("borewell") ||
+      q.includes("bore wells")
+    ) {
+      return `The Dashboard currently shows ${assistantData.borewells.toLocaleString()} borewells.`;
+    }
+
+    if (
+      q.includes("enquiry") ||
+      q.includes("enquiries")
+    ) {
+      return `There are ${assistantData.enquiries.toLocaleString()} enquiries currently shown on the Dashboard.`;
+    }
+
+    if (
+      q.includes("division 1") &&
+      (q.includes("compare") || q.includes("versus") || q.includes("vs"))
+    ) {
+      return (
+        `Division comparison\n\n` +
+        `Division 1: ${assistantData.division1Installations} installations, ` +
+        `${assistantData.division1Active} active, ${assistantData.division1Inactive} inactive.\n\n` +
+        `Division 2: ${assistantData.division2Installations.toLocaleString()} installations, ` +
+        `${assistantData.division2Active} active, ${assistantData.division2Inactive} inactive.`
+      );
+    }
+
+    if (
+      (q.includes("compare") || q.includes("comparison")) &&
+      q.includes("division")
+    ) {
+      return (
+        `Division comparison\n\n` +
+        `Division 1: ${assistantData.division1Installations} installations, ` +
+        `${assistantData.division1Active} active, ${assistantData.division1Inactive} inactive.\n\n` +
+        `Division 2: ${assistantData.division2Installations.toLocaleString()} installations, ` +
+        `${assistantData.division2Active} active, ${assistantData.division2Inactive} inactive.`
+      );
+    }
+
+    if (
+      q.includes("division 1") ||
+      (q.includes("division one"))
+    ) {
+      return (
+        `Division 1 has ${assistantData.division1Installations} installations: ` +
+        `${assistantData.division1Active} active and ${assistantData.division1Inactive} inactive.`
+      );
+    }
+
+    if (
+      q.includes("division 2") ||
+      q.includes("division two")
+    ) {
+      return (
+        `Division 2 has ${assistantData.division2Installations.toLocaleString()} installations: ` +
+        `${assistantData.division2Active} active and ${assistantData.division2Inactive} inactive.`
+      );
+    }
+
+    if (
+      (q === "and division 2" ||
+        q === "what about division 2" ||
+        q.includes("what about division 2")) &&
+      previousQuestion.includes("division 1")
+    ) {
+      return (
+        `Division 2 has ${assistantData.division2Installations.toLocaleString()} installations: ` +
+        `${assistantData.division2Active} active and ${assistantData.division2Inactive} inactive.`
+      );
+    }
+
+    if (
+      (q === "and division 1" ||
+        q === "what about division 1" ||
+        q.includes("what about division 1")) &&
+      previousQuestion.includes("division 2")
+    ) {
+      return (
+        `Division 1 has ${assistantData.division1Installations} installations: ` +
+        `${assistantData.division1Active} active and ${assistantData.division1Inactive} inactive.`
+      );
+    }
+
+    if (
       q.includes("sub division") ||
       q.includes("subdivision") ||
       q.includes("constituenc") ||
       q.includes("ward") ||
       q.includes("official")
     ) {
-      return "The Reports page currently shows 2 divisions, 6 sub-divisions, 34 constituencies, 213 wards, and 26 officials.";
+      return (
+        `The Reports page currently shows ${assistantData.divisions} divisions, ` +
+        `${assistantData.subDivisions} sub-divisions, ` +
+        `${assistantData.constituencies} constituencies, ` +
+        `${assistantData.wards} wards, and ` +
+        `${assistantData.officials} officials.`
+      );
     }
 
-    if (q.includes("motor") || q.includes("recent event") || q.includes("activity")) {
-      return "The latest displayed motor activities are a motor stopped in MANUAL mode at 09:36 PM and a motor stopped in REMOTE COMMAND mode at 09:31 PM.";
+    if (
+      q.includes("installation") ||
+      q.includes("installations")
+    ) {
+      return (
+        `The Reports page contains ${assistantData.totalReportInstallations.toLocaleString()} installations. ` +
+        `${assistantData.activeReportInstallations.toLocaleString()} are active and ` +
+        `${assistantData.inactiveReportInstallations.toLocaleString()} are inactive.`
+      );
     }
 
-    if (q.includes("water")) {
-      return "The Reports page displays Water Yield against ON Cycle, OFF Cycle, Overload Trip, and Unload Trip. The displayed values are 540, 728, 4,547, and 22,007 respectively.";
+    if (
+      q.includes("water total") ||
+      q.includes("total water") ||
+      q.includes("total water yield")
+    ) {
+      return (
+        `The displayed water values total ${totalWater.toLocaleString()} units across ` +
+        `${totalCycles.toLocaleString()} displayed cycles/trips.`
+      );
     }
 
-    if (q.includes("on cycle") || q.includes("off cycle") || q.includes("overload") || q.includes("unload")) {
-      return "The displayed report values are ON Cycle: 540 with 70 cycles, OFF Cycle: 728 with 166 cycles, Overload Trip: 4,547 with 340.78 cycles/trips, and Unload Trip: 22,007 with 220 cycles/trips.";
+    if (
+      q.includes("highest water") ||
+      q.includes("most water") ||
+      q.includes("maximum water")
+    ) {
+      return (
+        `${highestWaterCategory.name} has the highest displayed water value at ` +
+        `${highestWaterCategory.water.toLocaleString()}.`
+      );
     }
 
-    if (q.includes("dashboard") || q.includes("statistics") || q.includes("stats")) {
-      return `The dashboard currently shows ${assistantData.users} users, ${assistantData.products.toLocaleString()} products, ${assistantData.activeDevices.toLocaleString()} active devices, ${assistantData.farms} farms, ${assistantData.borewells.toLocaleString()} borewells, and ${assistantData.installations.toLocaleString()} installations.`;
+    if (
+      q.includes("water") ||
+      q.includes("water yield")
+    ) {
+      return (
+        `Water Yield values shown in Reports:\n\n` +
+        `ON Cycle: ${waterReportData[0].water.toLocaleString()} with ${waterReportData[0].cycles} cycles\n` +
+        `OFF Cycle: ${waterReportData[1].water.toLocaleString()} with ${waterReportData[1].cycles} cycles\n` +
+        `Overload Trip: ${waterReportData[2].water.toLocaleString()} with ${waterReportData[2].cycles} cycles/trips\n` +
+        `Unload Trip: ${waterReportData[3].water.toLocaleString()} with ${waterReportData[3].cycles} cycles/trips`
+      );
     }
 
-    if (q.includes("hello") || q.includes("hi") || q.includes("hey")) {
-      return "Hello! I can answer questions using the Dashboard and Reports data currently displayed in Krishi Hrudaya.";
+    if (q.includes("on cycle")) {
+      return `ON Cycle shows ${waterReportData[0].water.toLocaleString()} water units and ${waterReportData[0].cycles} cycles.`;
     }
 
-    return "I can answer questions about the Dashboard and Reports data currently available in this application. Try asking about users, products, active devices, farms, installations, failed tests, divisions, water yield, or recent motor activity.";
+    if (q.includes("off cycle")) {
+      return `OFF Cycle shows ${waterReportData[1].water.toLocaleString()} water units and ${waterReportData[1].cycles} cycles.`;
+    }
+
+    if (q.includes("overload")) {
+      return `Overload Trip shows ${waterReportData[2].water.toLocaleString()} water units and ${waterReportData[2].cycles} cycles/trips.`;
+    }
+
+    if (q.includes("unload")) {
+      return `Unload Trip shows ${waterReportData[3].water.toLocaleString()} water units and ${waterReportData[3].cycles} cycles/trips.`;
+    }
+
+    if (
+      q.includes("latest motor") ||
+      q.includes("latest event") ||
+      q.includes("most recent event")
+    ) {
+      const latest = activities[0];
+
+      return (
+        `Latest displayed event:\n\n` +
+        `${latest.title}\n` +
+        `Time: ${latest.time}\n` +
+        `UID: ${latest.uid}\n` +
+        `Details: ${latest.description}`
+      );
+    }
+
+    if (
+      q.includes("recent motor") ||
+      q.includes("motor event") ||
+      q.includes("recent event") ||
+      q.includes("activity") ||
+      q.includes("activities")
+    ) {
+      return (
+        `Recent displayed motor activities:\n\n` +
+        `1. ${activities[0].title} at ${activities[0].time}. UID: ${activities[0].uid}.\n\n` +
+        `2. ${activities[1].title} at ${activities[1].time}. UID: ${activities[1].uid}.`
+      );
+    }
+
+    if (
+      q.includes("voltage") ||
+      q.includes("amps") ||
+      q.includes("current") ||
+      q.includes("run time") ||
+      q.includes("uid")
+    ) {
+      return (
+        `The two displayed activities contain voltage, current, run-time, water-yield, and UID information. ` +
+        `Ask "latest motor event" to see the complete latest activity record.`
+      );
+    }
+
+    if (
+      q.includes("offline motor") ||
+      q.includes("which motor is offline") ||
+      q.includes("motor offline")
+    ) {
+      return (
+        `Offline motor status is not available in the currently displayed Dashboard or Reports data. ` +
+        `The available activity data only shows two recent motor stop events.`
+      );
+    }
+
+    if (
+      q.includes("power failure") ||
+      q.includes("power failures")
+    ) {
+      return (
+        `The current Dashboard version does not display power-failure history in its visible activity data, ` +
+        `so I cannot provide a verified power-failure count from the current frontend data.`
+      );
+    }
+
+    if (
+      q.includes("alert") ||
+      q.includes("alerts")
+    ) {
+      return (
+        `A complete alert dataset is not available in the currently displayed Dashboard and Reports data, ` +
+        `so I cannot provide a verified list of all alerts.`
+      );
+    }
+
+    if (
+      q.includes("last month") ||
+      q.includes("previous month") ||
+      q.includes("compare this month")
+    ) {
+      return (
+        `A previous-month dataset is not available in the current frontend data, ` +
+        `so I cannot make a verified month-to-month comparison.`
+      );
+    }
+
+    if (
+      q.includes("report") &&
+      (q.includes("summary") || q.includes("overview"))
+    ) {
+      return (
+        `Reports Summary\n\n` +
+        `Divisions: ${assistantData.divisions}\n` +
+        `Sub-divisions: ${assistantData.subDivisions}\n` +
+        `Constituencies: ${assistantData.constituencies}\n` +
+        `Wards: ${assistantData.wards}\n` +
+        `Officials: ${assistantData.officials}\n` +
+        `Installations: ${assistantData.totalReportInstallations.toLocaleString()}\n` +
+        `Active Installations: ${assistantData.activeReportInstallations.toLocaleString()}\n` +
+        `Inactive Installations: ${assistantData.inactiveReportInstallations.toLocaleString()}`
+      );
+    }
+
+    if (
+      q.includes("dashboard") ||
+      q.includes("statistics") ||
+      q.includes("stats")
+    ) {
+      return dashboardSummary;
+    }
+
+    return (
+      `I can answer questions using the data currently available in the Dashboard and Reports.\n\n` +
+      `Try asking about active devices, users, products, failed tests, farms, ` +
+      `installations, divisions, water yield, or recent motor activity.`
+    );
   };
 
   const askAssistant = (question: string) => {
@@ -263,6 +593,7 @@ useEffect(() => {
   const runAssistantAction = (question: string) => {
     askAssistant(question);
   };
+
   const [reportDivision, setReportDivision] = useState("All Divisions");
   const [reportStatus, setReportStatus] = useState("All Status");
   const [reportPeriod, setReportPeriod] = useState("This Month");

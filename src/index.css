@@ -4892,3 +4892,24 @@ button {
 .statistics-panel .product-status-item small {
   font-size: 9px;
 }
+.statistics-panel .product-status-item {
+  grid-template-columns: 31px minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.statistics-panel .product-status-item > div:nth-child(2) span {
+  font-size: 8.5px;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.statistics-panel .product-status-item > div:nth-child(2) strong {
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.statistics-panel .product-status-item small {
+  font-size: 8.5px;
+  white-space: nowrap;
+}

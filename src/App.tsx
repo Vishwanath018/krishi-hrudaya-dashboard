@@ -13,6 +13,7 @@ import {
   Cpu,
   Droplets,
   Download,
+  Database,
   FileBarChart,
   Grid2X2,
   Leaf,
@@ -90,7 +91,7 @@ const activities = [
 ];
 
 const notifications: [string, string, string, any, string][] = [
-  ["Power failure detected", "Ward 26 Å“ Rammurthy Nagara", "2 mins ago", Bell, "danger"],
+  ["Power failure detected", "Ward 26 Ãƒâ€¦Ã¢â‚¬Å“ Rammurthy Nagara", "2 mins ago", Bell, "danger"],
   ["Test completed", "Farm ID: 1024", "12 mins ago", CheckCircle2, "success"],
   ["New device registered", "Device ID: KH-4582", "1 hour ago", Cpu, "blue"]
 ];
@@ -135,459 +136,538 @@ useEffect(() => {
     { role: "user" | "assistant"; text: string }[]
   >([]);
 
-  const assistantData = {
-    users: 880,
-    products: 3687,
-    assignedProducts: 1683,
-    activeDevices: 3578,
-    farms: 256,
-    borewells: 3578,
-    installations: 3578,
-    testPassed: 3573,
-    testFailed: 6,
-    permissions: 1621,
-    enquiries: 5,
-    divisions: 2,
-    subDivisions: 6,
-    constituencies: 34,
-    wards: 213,
-    officials: 26,
-    division1Installations: 569,
-    division1Active: 450,
-    division1Inactive: 119,
-    division2Installations: 1108,
-    division2Active: 791,
-    division2Inactive: 317,
-    totalReportInstallations: 1680,
-    activeReportInstallations: 1241,
-    inactiveReportInstallations: 436
-  };
-
-  const normalizeAssistantQuestion = (question: string) =>
-    question
-      .toLowerCase()
-      .replace(/[?,.!]/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-
-  const getAssistantResponse = (question: string) => {
-    const q = normalizeAssistantQuestion(question);
-    const previousQuestion =
-      assistantMessages.length > 0
-        ? normalizeAssistantQuestion(
-            [...assistantMessages]
-              .reverse()
-              .find((message) => message.role === "user")?.text || ""
-          )
-        : "";
-
-    const totalWater =
-      waterReportData.reduce((total, item) => total + item.water, 0);
-
-    const totalCycles =
-      waterReportData.reduce((total, item) => total + item.cycles, 0);
-
-    const highestWaterCategory = waterReportData.reduce(
-      (highest, item) => (item.water > highest.water ? item : highest),
-      waterReportData[0]
-    );
-
-    const dashboardSummary =
-      `Dashboard Summary\n\n` +
-      `Users: ${assistantData.users.toLocaleString()}\n` +
-      `Products: ${assistantData.products.toLocaleString()}\n` +
-      `Assigned Products: ${assistantData.assignedProducts.toLocaleString()}\n` +
-      `Active Devices: ${assistantData.activeDevices.toLocaleString()}\n` +
-      `Farms: ${assistantData.farms.toLocaleString()}\n` +
-      `Borewells: ${assistantData.borewells.toLocaleString()}\n` +
-      `Installations: ${assistantData.installations.toLocaleString()}\n` +
-      `Tests Passed: ${assistantData.testPassed.toLocaleString()}\n` +
-      `Tests Failed: ${assistantData.testFailed.toLocaleString()}\n` +
-      `User Permissions: ${assistantData.permissions.toLocaleString()}\n` +
-      `Enquiries: ${assistantData.enquiries.toLocaleString()}`;
-
-    if (!q) {
-      return "Please ask me something about the Dashboard or Reports.";
-    }
-
-    if (
-      q === "hi" ||
-      q === "hello" ||
-      q === "hey" ||
-      q.includes("good morning") ||
-      q.includes("good afternoon") ||
-      q.includes("good evening")
-    ) {
-      return "Hello! I can answer questions using the Dashboard and Reports data currently displayed in Krishi Hrudaya.";
-    }
-
-    if (
-      q.includes("complete dashboard") ||
-      q.includes("dashboard summary") ||
-      q.includes("full dashboard") ||
-      q.includes("all dashboard") ||
-      q === "dashboard"
-    ) {
-      return dashboardSummary;
-    }
-
-    if (
-      q.includes("active device") ||
-      q.includes("online device") ||
-      q.includes("how many devices") ||
-      q.includes("device count") ||
-      q.includes("number of devices")
-    ) {
-      return `There are ${assistantData.activeDevices.toLocaleString()} active devices shown on the Dashboard.`;
-    }
-
-    if (
-      q.includes("failed test") ||
-      q.includes("test failed") ||
-      q.includes("tests failed")
-    ) {
-      return `${assistantData.testFailed} tests are currently shown as failed. ${assistantData.testPassed.toLocaleString()} tests are shown as passed.`;
-    }
-
-    if (
-      q.includes("passed test") ||
-      q.includes("test passed") ||
-      q.includes("tests passed") ||
-      q.includes("pass rate")
-    ) {
-      return `${assistantData.testPassed.toLocaleString()} tests are shown as passed and ${assistantData.testFailed} as failed.`;
-    }
-
-    if (
-      q.includes("assigned product") ||
-      q.includes("assigned products")
-    ) {
-      return `The Dashboard shows ${assistantData.assignedProducts.toLocaleString()} assigned products out of ${assistantData.products.toLocaleString()} total products.`;
-    }
-
-    if (
-      q.includes("product") ||
-      q.includes("products")
-    ) {
-      return `The Dashboard shows ${assistantData.products.toLocaleString()} total products, including ${assistantData.assignedProducts.toLocaleString()} assigned products.`;
-    }
-
-    if (
-      q.includes("user permission") ||
-      q.includes("permissions")
-    ) {
-      return `There are ${assistantData.permissions.toLocaleString()} user permissions shown on the Dashboard.`;
-    }
-
-    if (
-      q.includes("user") ||
-      q.includes("users")
-    ) {
-      return `There are ${assistantData.users.toLocaleString()} users currently shown on the Dashboard.`;
-    }
-
-    if (
-      q.includes("farm") ||
-      q.includes("farms")
-    ) {
-      return `There are ${assistantData.farms.toLocaleString()} farms shown on the Dashboard.`;
-    }
-
-    if (
-      q.includes("borewell") ||
-      q.includes("bore wells")
-    ) {
-      return `The Dashboard currently shows ${assistantData.borewells.toLocaleString()} borewells.`;
-    }
-
-    if (
-      q.includes("enquiry") ||
-      q.includes("enquiries")
-    ) {
-      return `There are ${assistantData.enquiries.toLocaleString()} enquiries currently shown on the Dashboard.`;
-    }
-
-    if (
-      q.includes("division 1") &&
-      (q.includes("compare") || q.includes("versus") || q.includes("vs"))
-    ) {
-      return (
-        `Division comparison\n\n` +
-        `Division 1: ${assistantData.division1Installations} installations, ` +
-        `${assistantData.division1Active} active, ${assistantData.division1Inactive} inactive.\n\n` +
-        `Division 2: ${assistantData.division2Installations.toLocaleString()} installations, ` +
-        `${assistantData.division2Active} active, ${assistantData.division2Inactive} inactive.`
-      );
-    }
-
-    if (
-      (q.includes("compare") || q.includes("comparison")) &&
-      q.includes("division")
-    ) {
-      return (
-        `Division comparison\n\n` +
-        `Division 1: ${assistantData.division1Installations} installations, ` +
-        `${assistantData.division1Active} active, ${assistantData.division1Inactive} inactive.\n\n` +
-        `Division 2: ${assistantData.division2Installations.toLocaleString()} installations, ` +
-        `${assistantData.division2Active} active, ${assistantData.division2Inactive} inactive.`
-      );
-    }
-
-    if (
-      q.includes("division 1") ||
-      (q.includes("division one"))
-    ) {
-      return (
-        `Division 1 has ${assistantData.division1Installations} installations: ` +
-        `${assistantData.division1Active} active and ${assistantData.division1Inactive} inactive.`
-      );
-    }
-
-    if (
-      q.includes("division 2") ||
-      q.includes("division two")
-    ) {
-      return (
-        `Division 2 has ${assistantData.division2Installations.toLocaleString()} installations: ` +
-        `${assistantData.division2Active} active and ${assistantData.division2Inactive} inactive.`
-      );
-    }
-
-    if (
-      (q === "and division 2" ||
-        q === "what about division 2" ||
-        q.includes("what about division 2")) &&
-      previousQuestion.includes("division 1")
-    ) {
-      return (
-        `Division 2 has ${assistantData.division2Installations.toLocaleString()} installations: ` +
-        `${assistantData.division2Active} active and ${assistantData.division2Inactive} inactive.`
-      );
-    }
-
-    if (
-      (q === "and division 1" ||
-        q === "what about division 1" ||
-        q.includes("what about division 1")) &&
-      previousQuestion.includes("division 2")
-    ) {
-      return (
-        `Division 1 has ${assistantData.division1Installations} installations: ` +
-        `${assistantData.division1Active} active and ${assistantData.division1Inactive} inactive.`
-      );
-    }
-
-    if (
-      q.includes("sub division") ||
-      q.includes("subdivision") ||
-      q.includes("constituenc") ||
-      q.includes("ward") ||
-      q.includes("official")
-    ) {
-      return (
-        `The Reports page currently shows ${assistantData.divisions} divisions, ` +
-        `${assistantData.subDivisions} sub-divisions, ` +
-        `${assistantData.constituencies} constituencies, ` +
-        `${assistantData.wards} wards, and ` +
-        `${assistantData.officials} officials.`
-      );
-    }
-
-    if (
-      q.includes("installation") ||
-      q.includes("installations")
-    ) {
-      return (
-        `The Reports page contains ${assistantData.totalReportInstallations.toLocaleString()} installations. ` +
-        `${assistantData.activeReportInstallations.toLocaleString()} are active and ` +
-        `${assistantData.inactiveReportInstallations.toLocaleString()} are inactive.`
-      );
-    }
-
-    if (
-      q.includes("water total") ||
-      q.includes("total water") ||
-      q.includes("total water yield")
-    ) {
-      return (
-        `The displayed water values total ${totalWater.toLocaleString()} units across ` +
-        `${totalCycles.toLocaleString()} displayed cycles/trips.`
-      );
-    }
-
-    if (
-      q.includes("highest water") ||
-      q.includes("most water") ||
-      q.includes("maximum water")
-    ) {
-      return (
-        `${highestWaterCategory.name} has the highest displayed water value at ` +
-        `${highestWaterCategory.water.toLocaleString()}.`
-      );
-    }
-
-    if (
-      q.includes("water") ||
-      q.includes("water yield")
-    ) {
-      return (
-        `Water Yield values shown in Reports:\n\n` +
-        `ON Cycle: ${waterReportData[0].water.toLocaleString()} with ${waterReportData[0].cycles} cycles\n` +
-        `OFF Cycle: ${waterReportData[1].water.toLocaleString()} with ${waterReportData[1].cycles} cycles\n` +
-        `Overload Trip: ${waterReportData[2].water.toLocaleString()} with ${waterReportData[2].cycles} cycles/trips\n` +
-        `Unload Trip: ${waterReportData[3].water.toLocaleString()} with ${waterReportData[3].cycles} cycles/trips`
-      );
-    }
-
-    if (q.includes("on cycle")) {
-      return `ON Cycle shows ${waterReportData[0].water.toLocaleString()} water units and ${waterReportData[0].cycles} cycles.`;
-    }
-
-    if (q.includes("off cycle")) {
-      return `OFF Cycle shows ${waterReportData[1].water.toLocaleString()} water units and ${waterReportData[1].cycles} cycles.`;
-    }
-
-    if (q.includes("overload")) {
-      return `Overload Trip shows ${waterReportData[2].water.toLocaleString()} water units and ${waterReportData[2].cycles} cycles/trips.`;
-    }
-
-    if (q.includes("unload")) {
-      return `Unload Trip shows ${waterReportData[3].water.toLocaleString()} water units and ${waterReportData[3].cycles} cycles/trips.`;
-    }
-
-    if (
-      q.includes("latest motor") ||
-      q.includes("latest event") ||
-      q.includes("most recent event")
-    ) {
-      const latest = activities[0];
-
-      return (
-        `Latest displayed event:\n\n` +
-        `${latest.title}\n` +
-        `Time: ${latest.time}\n` +
-        `UID: ${latest.uid}\n` +
-        `Details: ${latest.description}`
-      );
-    }
-
-    if (
-      q.includes("recent motor") ||
-      q.includes("motor event") ||
-      q.includes("recent event") ||
-      q.includes("activity") ||
-      q.includes("activities")
-    ) {
-      return (
-        `Recent displayed motor activities:\n\n` +
-        `1. ${activities[0].title} at ${activities[0].time}. UID: ${activities[0].uid}.\n\n` +
-        `2. ${activities[1].title} at ${activities[1].time}. UID: ${activities[1].uid}.`
-      );
-    }
-
-    if (
-      q.includes("voltage") ||
-      q.includes("amps") ||
-      q.includes("current") ||
-      q.includes("run time") ||
-      q.includes("uid")
-    ) {
-      return (
-        `The two displayed activities contain voltage, current, run-time, water-yield, and UID information. ` +
-        `Ask "latest motor event" to see the complete latest activity record.`
-      );
-    }
-
-    if (
-      q.includes("offline motor") ||
-      q.includes("which motor is offline") ||
-      q.includes("motor offline")
-    ) {
-      return (
-        `Offline motor status is not available in the currently displayed Dashboard or Reports data. ` +
-        `The available activity data only shows two recent motor stop events.`
-      );
-    }
-
-    if (
-      q.includes("power failure") ||
-      q.includes("power failures")
-    ) {
-      return (
-        `The current Dashboard version does not display power-failure history in its visible activity data, ` +
-        `so I cannot provide a verified power-failure count from the current frontend data.`
-      );
-    }
-
-    if (
-      q.includes("alert") ||
-      q.includes("alerts")
-    ) {
-      return (
-        `A complete alert dataset is not available in the currently displayed Dashboard and Reports data, ` +
-        `so I cannot provide a verified list of all alerts.`
-      );
-    }
-
-    if (
-      q.includes("last month") ||
-      q.includes("previous month") ||
-      q.includes("compare this month")
-    ) {
-      return (
-        `A previous-month dataset is not available in the current frontend data, ` +
-        `so I cannot make a verified month-to-month comparison.`
-      );
-    }
-
-    if (
-      q.includes("report") &&
-      (q.includes("summary") || q.includes("overview"))
-    ) {
-      return (
-        `Reports Summary\n\n` +
-        `Divisions: ${assistantData.divisions}\n` +
-        `Sub-divisions: ${assistantData.subDivisions}\n` +
-        `Constituencies: ${assistantData.constituencies}\n` +
-        `Wards: ${assistantData.wards}\n` +
-        `Officials: ${assistantData.officials}\n` +
-        `Installations: ${assistantData.totalReportInstallations.toLocaleString()}\n` +
-        `Active Installations: ${assistantData.activeReportInstallations.toLocaleString()}\n` +
-        `Inactive Installations: ${assistantData.inactiveReportInstallations.toLocaleString()}`
-      );
-    }
-
-    if (
-      q.includes("dashboard") ||
-      q.includes("statistics") ||
-      q.includes("stats")
-    ) {
-      return dashboardSummary;
-    }
-
-    return (
-      `I can answer questions using the data currently available in the Dashboard and Reports.\n\n` +
-      `Try asking about active devices, users, products, failed tests, farms, ` +
-      `installations, divisions, water yield, or recent motor activity.`
-    );
-  };
-
-  const askAssistant = (question: string) => {
+  const askAssistant = async (question: string) => {
     const trimmedQuestion = question.trim();
 
-    if (!trimmedQuestion) {
-      return;
-    }
-
-    const answer = getAssistantResponse(trimmedQuestion);
+    if (!trimmedQuestion) return;
 
     setAssistantMessages((messages) => [
       ...messages,
       { role: "user", text: trimmedQuestion },
-      { role: "assistant", text: answer }
     ]);
 
     setAssistantInput("");
+
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:5000/api/assistant",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            question: trimmedQuestion,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.error ||
+          result.message ||
+          "Assistant backend request failed"
+        );
+      }
+
+      const formatDatabaseSummary = (
+        data: Record<string, unknown>
+      ): string => {
+        const rows = [
+          ["Users", data.users],
+          ["Active Users", data.active_users],
+          ["Products", data.products],
+          ["Farms", data.farms],
+          ["Installations", data.installations],
+          ["Borewells", data.borewells],
+          ["Starter Devices", data.starter_devices],
+          ["Statistics Records", data.statistics_records],
+          ["Event Logs", data.event_logs],
+          ["User Permissions", data.user_permissions],
+          ["Enquiries", data.enquiries],
+          ["BWSSB Records", data.bwssb_records],
+        ];
+
+        const table = rows
+          .map(
+            ([label, value]) =>
+              `| ${label} | ${Number(value ?? 0).toLocaleString("en-IN")} |`
+          )
+          .join("\n");
+
+        const users = Number(data.users ?? 0).toLocaleString("en-IN");
+        const farms = Number(data.farms ?? 0).toLocaleString("en-IN");
+        const installations = Number(
+          data.installations ?? 0
+        ).toLocaleString("en-IN");
+        const products = Number(data.products ?? 0).toLocaleString("en-IN");
+        const borewells = Number(
+          data.borewells ?? 0
+        ).toLocaleString("en-IN");
+        const eventLogs = Number(
+          data.event_logs ?? 0
+        ).toLocaleString("en-IN");
+
+        return [
+          "## Database Summary",
+          "",
+          "The following information was retrieved from the live Krishi Hrudaya database using read-only access.",
+          "",
+          "| Category | Current Count |",
+          "|---|---:|",
+          table,
+          "",
+          "### Summary",
+          "",
+          `The database currently contains **${users} users** across **${farms} farms** and **${installations} installations**. It contains **${products} products** and **${borewells} borewells**. The event log currently contains **${eventLogs} records**.`,
+        ].join("\n");
+      };
+
+      const formatRecordsAsTable = (
+        records: unknown[]
+      ): string => {
+        if (records.length === 0) {
+          return "No records were found.";
+        }
+
+        const limitedRecords = records.slice(0, 20);
+
+        const objectRecords = limitedRecords.filter(
+          (record): record is Record<string, unknown> =>
+            typeof record === "object" &&
+            record !== null &&
+            !Array.isArray(record)
+        );
+
+        if (objectRecords.length === 0) {
+          return limitedRecords
+            .map((record, index) => `${index + 1}. ${String(record)}`)
+            .join("\n");
+        }
+
+        const preferredColumns = [
+          "uid",
+          "farm_id",
+          "pump_name",
+          "motor_state",
+          "device_state",
+          "power_available",
+          "signal_strength",
+          "actual_water_level",
+          "status",
+          "created_at",
+          "updated_at",
+        ];
+
+        const columns = preferredColumns.filter((column) =>
+          objectRecords.some((record) => column in record)
+        );
+
+        const fallbackColumns =
+          columns.length > 0
+            ? columns
+            : Object.keys(objectRecords[0]).slice(0, 8);
+
+        const header = `| ${fallbackColumns
+          .map((column) =>
+            column
+              .replaceAll("_", " ")
+              .replace(/\b\w/g, (letter) => letter.toUpperCase())
+          )
+          .join(" | ")} |`;
+
+        const separator = `| ${fallbackColumns
+          .map(() => "---")
+          .join(" | ")} |`;
+
+        const body = objectRecords
+          .map(
+            (record) =>
+              `| ${fallbackColumns
+                .map((column) => {
+                  const value = record[column];
+
+                  if (value === null || value === undefined) {
+                    return "N/A";
+                  }
+
+                  return String(value)
+                    .replaceAll("|", "\\|")
+                    .replaceAll("\n", " ");
+                })
+                .join(" | ")} |`
+          )
+          .join("\n");
+
+        const showingText =
+          records.length > 20
+            ? `Showing the first **20 records** out of **${records.length} retrieved records**.`
+            : `Showing **${records.length} records** retrieved from the read-only database.`;
+
+        return [
+          showingText,
+          "",
+          header,
+          separator,
+          body,
+        ].join("\n");
+      };
+
+      const formatBackendResponse = (
+        intent: string,
+        data: unknown
+      ): string => {
+        if (
+          intent === "database_summary" &&
+          typeof data === "object" &&
+          data !== null &&
+          !Array.isArray(data)
+        ) {
+          return formatDatabaseSummary(
+            data as Record<string, unknown>
+          );
+        }
+
+        if (Array.isArray(data)) {
+          return [
+            "## Database Records",
+            "",
+            "The following records were retrieved from the live read-only database.",
+            "",
+            formatRecordsAsTable(data),
+          ].join("\n");
+        }
+
+        if (
+          typeof data === "object" &&
+          data !== null
+        ) {
+          const entries = Object.entries(
+            data as Record<string, unknown>
+          );
+
+          const table = entries
+            .map(
+              ([key, value]) =>
+                `| ${key
+                  .replaceAll("_", " ")
+                  .replace(/\b\w/g, (letter) => letter.toUpperCase())} | ${String(value ?? "N/A")} |`
+            )
+            .join("\n");
+
+          return [
+            "## Database Information",
+            "",
+            "The requested information was retrieved from the live read-only database.",
+            "",
+            "| Field | Value |",
+            "|---|---:|",
+            table,
+          ].join("\n");
+        }
+
+        return String(data ?? "No data available.");
+      };
+
+      const dataText =
+        result.data !== undefined
+          ? `\n\n${formatBackendResponse(
+              result.intent,
+              result.data
+            )}`
+          : "";
+
+      const answer =
+        `${result.message || "Database information retrieved."}` +
+        dataText;
+
+      setAssistantMessages((messages) => [
+        ...messages,
+        {
+          role: "assistant",
+          text: answer,
+        },
+      ]);
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Unknown backend error";
+
+      setAssistantMessages((messages) => [
+        ...messages,
+        {
+          role: "assistant",
+          text:
+            `I couldn't retrieve live database information right now.\n\n` +
+            message,
+        },
+      ]);
+    }
+  };
+
+
+  const renderAssistantMessage = (text: string) => {
+    const normalized = text
+      .replace(/\r\n/g, "\n")
+      .replace(/\r/g, "\n")
+      .replace(/\\n/g, "\n");
+
+    const lines = normalized.split("\n");
+    const elements: React.ReactNode[] = [];
+
+    let index = 0;
+
+    while (index < lines.length) {
+      const line = lines[index].trim();
+
+      if (!line) {
+        index++;
+        continue;
+      }
+
+      // Database Summary heading
+      if (line.includes("## Database Summary")) {
+        elements.push(
+          <div className="assistant-response-title" key={`title-${index}`}>
+            <div className="assistant-response-title-icon">
+              <Database size={17} />
+            </div>
+
+            <div>
+              <strong>Database Summary</strong>
+              <span>Live database summary retrieved using read-only access</span>
+            </div>
+          </div>
+        );
+
+        index++;
+        continue;
+      }
+
+      // Summary heading
+      if (line.includes("### Summary")) {
+        const summaryText = line
+          .replace(/^#+\s*Summary\s*/i, "")
+          .trim();
+
+        elements.push(
+          <div className="assistant-summary-card" key={`summary-${index}`}>
+            <div className="assistant-summary-icon">
+              <Activity size={17} />
+            </div>
+
+            <div className="assistant-summary-content">
+              <strong>Summary</strong>
+
+              <p>
+                {summaryText
+                  .replace(/\*\*/g, "")
+                  .replace(/\s+/g, " ")
+                  .trim()}
+              </p>
+            </div>
+          </div>
+        );
+
+        index++;
+        continue;
+      }
+
+      // Markdown table
+      if (
+        line.startsWith("|") &&
+        index + 1 < lines.length &&
+        lines[index + 1].trim().startsWith("|")
+      ) {
+        const tableLines: string[] = [];
+
+        while (
+          index < lines.length &&
+          lines[index].trim().startsWith("|")
+        ) {
+          tableLines.push(lines[index].trim());
+          index++;
+        }
+
+        if (tableLines.length >= 2) {
+          const parseRow = (row: string) =>
+            row
+              .split("|")
+              .slice(1, -1)
+              .map((cell) => cell.trim());
+
+          const headers = parseRow(tableLines[0]);
+
+          const dataLines = tableLines.slice(1).filter(
+            (row) => !/^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)+\|?$/.test(row)
+          );
+
+          const rows = dataLines.map(parseRow);
+
+          elements.push(
+            <div className="assistant-table-card" key={`table-${index}`}>
+              <div className="assistant-table-wrapper">
+                <table className="assistant-data-table">
+                  <thead>
+                    <tr>
+                      {headers.map((header, headerIndex) => (
+                        <th key={headerIndex}>
+                          {header}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {rows.map((row, rowIndex) => (
+                      <tr key={rowIndex}>
+                        {row.map((cell, cellIndex) => (
+                          <td
+                            key={cellIndex}
+                            className={
+                              cellIndex === row.length - 1
+                                ? "assistant-table-value"
+                                : ""
+                            }
+                          >
+                            {cell}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          );
+
+          continue;
+        }
+      }
+
+      // Normal paragraph
+      if (
+        !line.startsWith("##") &&
+        !line.startsWith("|")
+      ) {
+        const cleanText = line
+          .replace(/\*\*/g, "")
+          .replace(/\s+/g, " ")
+          .trim();
+
+        if (cleanText) {
+          elements.push(
+            <p
+              className="assistant-response-paragraph"
+              key={`paragraph-${index}`}
+            >
+              {cleanText}
+            </p>
+          );
+        }
+      }
+
+      index++;
+    }
+
+    /*
+     * The backend may sometimes return the complete Markdown response
+     * without newline characters. In that case, parse the table directly
+     * from the raw text as a fallback.
+     */
+    if (
+      elements.length <= 1 &&
+      normalized.includes("| Category | Current Count |")
+    ) {
+      const tableMatch = normalized.match(
+        /(\|\s*Category\s*\|\s*Current Count\s*\|[\s\S]*?)(?=###\s*Summary|$)/i
+      );
+
+      if (tableMatch) {
+        const tableText = tableMatch[1];
+        const tableLines = tableText
+          .split(/\s*(?=\|)/)
+          .map((line) => line.trim())
+          .filter((line) => line.startsWith("|"));
+
+        if (tableLines.length >= 2) {
+          const parseRow = (row: string) =>
+            row
+              .split("|")
+              .slice(1, -1)
+              .map((cell) => cell.trim());
+
+          const headers = parseRow(tableLines[0]);
+
+          const rows = tableLines
+            .slice(1)
+            .filter(
+              (row) =>
+                !/^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)+\|?$/.test(row)
+            )
+            .map(parseRow);
+
+          return (
+            <div className="assistant-rich-message">
+              <div className="assistant-response-title">
+                <div className="assistant-response-title-icon">
+                  <Database size={17} />
+                </div>
+
+                <div>
+                  <strong>Database Summary</strong>
+                  <span>
+                    Live database summary retrieved using read-only access
+                  </span>
+                </div>
+              </div>
+
+              <div className="assistant-table-card">
+                <div className="assistant-table-wrapper">
+                  <table className="assistant-data-table">
+                    <thead>
+                      <tr>
+                        {headers.map((header, i) => (
+                          <th key={i}>{header}</th>
+                        ))}
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {rows.map((row, rowIndex) => (
+                        <tr key={rowIndex}>
+                          {row.map((cell, cellIndex) => (
+                            <td
+                              key={cellIndex}
+                              className={
+                                cellIndex === row.length - 1
+                                  ? "assistant-table-value"
+                                  : ""
+                              }
+                            >
+                              {cell}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          );
+        }
+      }
+    }
+
+    return (
+      <div className="assistant-rich-message">
+        {elements}
+      </div>
+    );
   };
 
   const runAssistantAction = (question: string) => {
@@ -699,7 +779,7 @@ useEffect(() => {
     <div className={`app ${darkMode ? "dark" : ""}`}>
       <aside className={`sidebar ${sidebarOpen ? "open" : "collapsed"}`}>
         <div className="brand"><img src="/KH.png" alt="Krishi Hrudaya" /></div><div className="sidebar-divider" />
-        <div className="menu-label">{sidebarOpen ? "MENU" : "•"}</div>
+        <div className="menu-label">{sidebarOpen ? "MENU" : "Ã¢â‚¬Â¢"}</div>
 
         <nav className="sidebar-nav">
           {menuItems.map(([label, Icon]) => (
@@ -716,7 +796,7 @@ useEffect(() => {
         </nav>
 
         <div className="menu-label permission-label">
-          {sidebarOpen ? "PERMISSION" : "•"}
+          {sidebarOpen ? "PERMISSION" : "Ã¢â‚¬Â¢"}
         </div>
 
         <nav className="sidebar-nav">
@@ -1039,7 +1119,7 @@ useEffect(() => {
                       </div>
 
                       <div className="product-status-item passed">
-                        <div className="product-status-icon">✓</div>
+                        <div className="product-status-icon">Ã¢Å“â€œ</div>
                         <div>
                           <span>Test Passed</span>
                           <strong>3,573</strong>
@@ -1212,7 +1292,7 @@ useEffect(() => {
                   <div className="feature-icon cyan"><Droplets size={24} /></div>
                   <div>
                     <strong>Efficient Resource Use</strong>
-                    <span>Water, energy and crops Å“ optimized.</span>
+                    <span>Water, energy and crops Ãƒâ€¦Ã¢â‚¬Å“ optimized.</span>
                   </div>
                   <button><ChevronRight size={18} /></button>
                 </div>
@@ -1601,7 +1681,11 @@ useEffect(() => {
                       key={`${message.role}-${index}`}
                       className={`assistant-message ${message.role}`}
                     >
-                      <span>{message.text}</span>
+                      {message.role === "assistant" ? (
+                        renderAssistantMessage(message.text)
+                      ) : (
+                        <span>{message.text}</span>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -1616,7 +1700,7 @@ useEffect(() => {
                 <div className="assistant-welcome-card">
                   <strong>Hello! 👋</strong>
                   <p>
-                    I’m your Krishi Assistant. I can help you analyze dashboard
+                    I'm your Krishi Assistant. I can help you analyze dashboard
                     data, check device status, view reports, and answer
                     questions about your farms.
                   </p>
@@ -1628,8 +1712,7 @@ useEffect(() => {
               </div>
 
               <div className="assistant-actions">
-                <button>
-                  <span className="assistant-action-icon">
+                <button onClick={() => runAssistantAction("Show failed tests")}><span className="assistant-action-icon">
                     <FileBarChart size={19} />
                   </span>
                   <span>
@@ -1639,8 +1722,7 @@ useEffect(() => {
                   <ChevronRight size={16} />
                 </button>
 
-                <button>
-                  <span className="assistant-action-icon">
+                <button onClick={() => runAssistantAction("Today's power failures")}><span className="assistant-action-icon">
                     <Zap size={19} />
                   </span>
                   <span>
@@ -1650,8 +1732,7 @@ useEffect(() => {
                   <ChevronRight size={16} />
                 </button>
 
-                <button>
-                  <span className="assistant-action-icon">
+                <button onClick={() => runAssistantAction("Active devices")}><span className="assistant-action-icon">
                     <Cpu size={19} />
                   </span>
                   <span>
@@ -1661,7 +1742,7 @@ useEffect(() => {
                   <ChevronRight size={16} />
                 </button>
 
-                <button>
+                <button onClick={() => runAssistantAction("Recent motor events")}>
                   <span className="assistant-action-icon">
                     <Activity size={19} />
                   </span>
@@ -1672,8 +1753,7 @@ useEffect(() => {
                   <ChevronRight size={16} />
                 </button>
 
-                <button>
-                  <span className="assistant-action-icon">
+                <button onClick={() => runAssistantAction("Farm statistics")}><span className="assistant-action-icon">
                     <Leaf size={19} />
                   </span>
                   <span>
@@ -1699,13 +1779,6 @@ useEffect(() => {
                 <span />
                 <strong>OR ASK ANYTHING</strong>
                 <span />
-              </div>
-
-              <div className="assistant-prompts">
-                <button>“Show water yield for this month”</button>
-                <button>“Which motor is offline?”</button>
-                <button>“Compare this month with last month”</button>
-                <button>“Show all alerts”</button>
               </div>
 
               <div className="assistant-input">
@@ -1738,14 +1811,6 @@ useEffect(() => {
                   <Search size={19} />
                 </button>
               </div>
-
-              <div className="assistant-hint">
-                <span>💡</span>
-                <p>
-                  Try asking about devices, motors, water yield, alerts, or
-                  reports.
-                </p>
-              </div>
             </div>
           </div>
         )}
@@ -1755,6 +1820,12 @@ useEffect(() => {
 }
 
 export default App;
+
+
+
+
+
+
 
 
 

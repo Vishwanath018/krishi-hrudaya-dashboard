@@ -18,6 +18,8 @@ import {
   Grid2X2,
   Leaf,
   LockKeyhole,
+  Maximize2,
+  Minimize2,
   Menu,
   MessageSquare,
   Moon,
@@ -130,6 +132,7 @@ useEffect(() => {
   const [darkMode, setDarkMode] = useState(false);
   const [activeMenu, setActiveMenu] = useState("Dashboard");
   const [assistantOpen, setAssistantOpen] = useState(false);
+  const [assistantMaximized, setAssistantMaximized] = useState(false);
   const [search, setSearch] = useState("");
   const [assistantInput, setAssistantInput] = useState("");
   const [assistantMessages, setAssistantMessages] = useState<
@@ -344,27 +347,249 @@ useEffect(() => {
           typeof data === "object" &&
           data !== null
         ) {
-          const entries = Object.entries(
-            data as Record<string, unknown>
+          const objectData = data as Record<string, unknown>;
+
+          const formatCell = (value: unknown): string => {
+            if (value === null || value === undefined) {
+              return "N/A";
+            }
+
+            if (
+              typeof value === "object"
+            ) {
+              return JSON.stringify(value);
+            }
+
+            return String(value);
+          };
+
+          const formatObjectTable = (
+            value: Record<string, unknown>
+          ): string => {
+            const rows = Object.entries(value)
+              .filter(([, item]) => !Array.isArray(item))
+              .map(
+                ([key, item]) =>
+                  `| ${key
+                    .replaceAll("_", " ")
+                    .replace(/\b\w/g, (letter) => letter.toUpperCase())} | ${formatCell(item)} |`
+              );
+
+            return [
+              "| Field | Value |",
+              "|---|---:|",
+              ...rows,
+            ].join("\n");
+          };
+
+          const formatArrayTable = (
+            items: unknown[]
+          ): string => {
+            if (items.length === 0) {
+              return "No records found.";
+            }
+
+            const objects = items.filter(
+              (item): item is Record<string, unknown> =>
+                typeof item === "object" &&
+                item !== null &&
+                !Array.isArray(item)
+            );
+
+            if (objects.length === 0) {
+              return [
+                "| Value |",
+                "|---|",
+                ...items.map((item) => `| ${formatCell(item)} |`),
+              ].join("\n");
+            }
+
+            const columns = Array.from(
+              new Set(
+                objects.flatMap((item) => Object.keys(item))
+              )
+            );
+
+            const header = `| ${columns
+              .map((column) =>
+                column
+                  .replaceAll("_", " ")
+                  .replace(/\b\w/g, (letter) =>
+                    letter.toUpperCase()
+                  )
+              )
+              .join(" | ")} |`;
+
+            const separator = `| ${columns
+              .map(() => "---")
+              .join(" | ")} |`;
+
+            const rows = objects.map(
+              (item) =>
+                `| ${columns
+                  .map((column) => formatCell(item[column]))
+                  .join(" | ")} |`
+            );
+
+            return [
+              header,
+              separator,
+              ...rows,
+            ].join("\n");
+          };
+
+          // Handle multi-intent responses.
+          if (Array.isArray(objectData.sections)) {
+            const sections = objectData.sections
+              .map((section) => {
+                if (
+                  typeof section !== "object" ||
+                  section === null ||
+                  Array.isArray(section)
+                ) {
+                  return "";
+                }
+
+                const sectionObject =
+                  section as Record<string, unknown>;
+
+                const label =
+                  String(
+                    sectionObject.label ??
+                    sectionObject.intent ??
+                    "Database Information"
+                  );
+
+                const sectionData =
+                  sectionObject.data;
+
+                if (
+                  Array.isArray(sectionData)
+                ) {
+                  return [
+                    `### ${label}`,
+                    "",
+                    formatArrayTable(sectionData),
+                  ].join("\n");
+                }
+
+                if (
+                  typeof sectionData === "object" &&
+                  sectionData !== null
+                ) {
+                  const dataObject =
+                    sectionData as Record<string, unknown>;
+
+                  const scalarData: Record<string, unknown> = {};
+                  const nestedParts: string[] = [];
+
+                  Object.entries(dataObject).forEach(
+                    ([key, value]) => {
+                      if (Array.isArray(value)) {
+                        const title = key
+                          .replaceAll("_", " ")
+                          .replace(
+                            /\b\w/g,
+                            (letter) =>
+                              letter.toUpperCase()
+                          );
+
+                        nestedParts.push(
+                          [
+                            `### ${title}`,
+                            "",
+                            formatArrayTable(value),
+                          ].join("\n")
+                        );
+                      } else {
+                        scalarData[key] = value;
+                      }
+                    }
+                  );
+
+                  const parts: string[] = [];
+
+                  if (
+                    Object.keys(scalarData).length > 0
+                  ) {
+                    parts.push(
+                      formatObjectTable(scalarData)
+                    );
+                  }
+
+                  parts.push(...nestedParts);
+
+                  return [
+                    `### ${label}`,
+                    "",
+                    parts.join("\n\n"),
+                  ].join("\n");
+                }
+
+                return [
+                  `### ${label}`,
+                  "",
+                  "| Field | Value |",
+                  "|---|---:|",
+                  `| Value | ${formatCell(sectionData)} |`,
+                ].join("\n");
+              })
+              .filter(Boolean);
+
+            return [
+              "## Database Information",
+              "",
+              `Retrieved ${sections.length} requested information sections from the read-only database.`,
+              "",
+              ...sections,
+            ].join("\n");
+          }
+
+          // Handle normal object responses.
+          const scalarData: Record<string, unknown> = {};
+          const nestedParts: string[] = [];
+
+          Object.entries(objectData).forEach(
+            ([key, value]) => {
+              if (Array.isArray(value)) {
+                const title = key
+                  .replaceAll("_", " ")
+                  .replace(
+                    /\b\w/g,
+                    (letter) => letter.toUpperCase()
+                  );
+
+                nestedParts.push(
+                  [
+                    `### ${title}`,
+                    "",
+                    formatArrayTable(value),
+                  ].join("\n")
+                );
+              } else {
+                scalarData[key] = value;
+              }
+            }
           );
 
-          const table = entries
-            .map(
-              ([key, value]) =>
-                `| ${key
-                  .replaceAll("_", " ")
-                  .replace(/\b\w/g, (letter) => letter.toUpperCase())} | ${String(value ?? "N/A")} |`
-            )
-            .join("\n");
+          const parts: string[] = [];
+
+          if (
+            Object.keys(scalarData).length > 0
+          ) {
+            parts.push(
+              formatObjectTable(scalarData)
+            );
+          }
+
+          parts.push(...nestedParts);
 
           return [
             "## Database Information",
             "",
             "The requested information was retrieved from the live read-only database.",
             "",
-            "| Field | Value |",
-            "|---|---:|",
-            table,
+            parts.join("\n\n"),
           ].join("\n");
         }
 
@@ -474,6 +699,28 @@ useEffect(() => {
 
         index++;
         continue;
+      }
+
+      // Section heading such as Farms, Products, Installations, etc.
+      if (line.startsWith("### ")) {
+        const heading = line
+          .replace(/^###\s*/, "")
+          .replace(/\*\*/g, "")
+          .trim();
+
+        if (heading && heading.toLowerCase() !== "summary") {
+          elements.push(
+            <div
+              className="assistant-section-heading"
+              key={`section-heading-${index}`}
+            >
+              <strong>{heading}</strong>
+            </div>
+          );
+
+          index++;
+          continue;
+        }
       }
 
       // Markdown table
@@ -1652,7 +1899,7 @@ useEffect(() => {
         </button>
 
         {assistantOpen && (
-          <div className="assistant-panel">
+          <div className={`assistant-panel ${assistantMaximized ? "maximized" : ""}`}>
             <div className="assistant-header">
               <div className="assistant-brand">
                 <div className="assistant-logo">
@@ -1664,6 +1911,36 @@ useEffect(() => {
                 </div>
               </div>
 
+              <div className="assistant-header-actions">
+
+
+                <button
+
+
+                  className="assistant-maximize"
+
+
+                  onClick={() => setAssistantMaximized(!assistantMaximized)}
+
+
+                  aria-label={assistantMaximized ? "Restore assistant" : "Maximize assistant"}
+
+
+                  title={assistantMaximized ? "Restore" : "Maximize"}
+
+
+                >
+
+
+                  {assistantMaximized ? <Minimize2 size={19} /> : <Maximize2 size={19} />}
+
+
+                </button>
+
+
+              
+
+
               <button
                 className="assistant-close"
                 onClick={() => setAssistantOpen(false)}
@@ -1671,6 +1948,7 @@ useEffect(() => {
               >
                 <XCircle size={21} />
               </button>
+            </div>
             </div>
 
             <div className="assistant-body">
@@ -1763,13 +2041,13 @@ useEffect(() => {
                   <ChevronRight size={16} />
                 </button>
 
-                <button>
+                <button onClick={() => runAssistantAction("Give me the complete database")}>
                   <span className="assistant-action-icon">
-                    <FileBarChart size={19} />
+                    <Database size={19} />
                   </span>
                   <span>
-                    <strong>Generate report</strong>
-                    <small>Create a custom report</small>
+                    <strong>Complete Database Report</strong>
+                    <small>View the complete live database summary</small>
                   </span>
                   <ChevronRight size={16} />
                 </button>
@@ -1820,6 +2098,9 @@ useEffect(() => {
 }
 
 export default App;
+
+
+
 
 
 

@@ -6716,3 +6716,875 @@ button {
     padding: 6px 7px;
   }
 }
+
+/* KRISHI ASSISTANT - MAXIMIZE / RESTORE */
+
+.assistant-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.assistant-maximize,
+.assistant-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.assistant-maximize:hover,
+.assistant-close:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.assistant-panel.maximized {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border-radius: 0;
+  z-index: 9999;
+}
+
+.assistant-panel.maximized .assistant-body {
+  height: calc(100vh - 72px);
+  max-height: none;
+}
+
+.assistant-panel.maximized .assistant-messages {
+  width: 100%;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.assistant-panel.maximized .assistant-welcome,
+.assistant-panel.maximized .assistant-actions,
+.assistant-panel.maximized .assistant-or,
+.assistant-panel.maximized .assistant-input {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.assistant-panel.maximized .assistant-table-card {
+  width: 100%;
+}
+
+.assistant-panel.maximized .assistant-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.assistant-panel.maximized .assistant-data-table {
+  width: 100%;
+  min-width: 900px;
+}
+
+.assistant-panel.maximized .assistant-data-table th,
+.assistant-panel.maximized .assistant-data-table td {
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+}
+/* Center Krishi Assistant response content */
+.assistant-panel.maximized .assistant-messages,
+.assistant-panel.maximized .assistant-welcome,
+.assistant-panel.maximized .assistant-section-title,
+.assistant-panel.maximized .assistant-actions,
+.assistant-panel.maximized .assistant-or,
+.assistant-panel.maximized .assistant-input {
+  width: min(1250px, calc(100% - 48px));
+  max-width: 1250px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Center the actual response content */
+.assistant-panel.maximized .assistant-message {
+  width: 100%;
+  max-width: 1250px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Center response tables/cards */
+.assistant-panel.maximized .assistant-table-card {
+  width: 100%;
+  max-width: 1250px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Keep large tables usable */
+.assistant-panel.maximized .assistant-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Prevent the table from becoming unnecessarily narrow */
+.assistant-panel.maximized .assistant-data-table {
+  width: 100%;
+  min-width: 900px;
+}
+ 
+/* =========================================================
+   KRISHI ASSISTANT - MATCH SEARCH AREA WIDTH
+   ========================================================= */
+
+.assistant-panel.maximized .assistant-messages {
+  width: 1325px !important;
+  max-width: calc(100vw - 450px) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.assistant-panel.maximized .assistant-message {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.assistant-panel.maximized .assistant-rich-message {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.assistant-panel.maximized .assistant-table-card {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box;
+}
+
+.assistant-panel.maximized .assistant-table-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto;
+}
+
+.assistant-panel.maximized .assistant-data-table {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 900px;
+}
+
+/* ============================================================
+   KRISHI HRUDAYA - LIVE ACTIVITY UI OVERRIDES
+   ============================================================ */
+
+/* ============================================================
+   KRISHI HRUDAYA - LIVE ACTIVITY UI OVERRIDES
+   ============================================================ */
+
+/* ---------- Dashboard Recent Activities ---------- */
+
+.activities-panel .activities-list {
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  gap: 10px;
+}
+
+.activities-panel .activity-item {
+  flex: 0 0 auto;
+  width: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  padding: 13px 12px;
+  border: 1px solid #e3ebf2;
+  border-radius: 10px;
+  background: #ffffff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.activities-panel .activity-item:hover {
+  border-color: #cbd9e5;
+  box-shadow: 0 3px 10px rgba(16, 42, 67, 0.06);
+}
+
+.activities-panel .activity-icon {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+}
+
+.activities-panel .activity-content {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+}
+
+.activities-panel .activity-title-row {
+  align-items: center;
+}
+
+.activities-panel .activity-title-row strong {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.activities-panel .activity-content p {
+  margin: 5px 0 7px;
+  color: #60758a;
+  font-size: 9px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.activities-panel .activity-meta {
+  margin-top: 7px;
+  padding-top: 7px;
+  gap: 7px;
+  font-size: 8px;
+}
+
+
+/* ---------- Full Recent Activities Page ---------- */
+
+.division-report-page .activities-panel {
+  width: 100%;
+  min-width: 0;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+.division-report-page .activities-panel .activities-list {
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0;
+}
+
+.division-report-page .activities-panel .activity-item {
+  flex: 0 0 auto;
+  width: 100%;
+  min-height: 88px;
+  box-sizing: border-box;
+  padding: 15px 17px;
+  border: 1px solid #e0e8ef;
+  border-radius: 10px;
+  background: #ffffff;
+  align-items: flex-start;
+}
+
+.division-report-page .activities-panel .activity-icon {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.division-report-page .activities-panel .activity-content {
+  width: auto;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.division-report-page .activities-panel .activity-title-row strong {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.division-report-page .activities-panel .activity-content p {
+  margin: 6px 0 9px;
+  color: #60758a;
+  font-size: 10px;
+  line-height: 1.55;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.division-report-page .activities-panel .activity-meta {
+  margin-top: 8px;
+  padding-top: 8px;
+  gap: 8px;
+  font-size: 8px;
+}
+
+
+/* ---------- Activity Details ---------- */
+
+.activity-detail {
+  width: 100%;
+  min-width: 0;
+}
+
+.activity-detail .panel-header {
+  margin-bottom: 0;
+}
+
+.division-report-page .activity-data-box {
+  width: 100%;
+  max-width: none;
+  min-height: 0;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  align-items: stretch;
+  padding: 16px;
+  border: 1px solid #dce6ee;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.division-report-page .activity-data-row {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: minmax(75px, auto) minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  margin: 0;
+  padding: 12px 13px;
+  border: 1px solid #e5edf3;
+  border-radius: 8px;
+  background: #fbfdff;
+}
+
+.division-report-page .activity-data-row strong {
+  color: #718397;
+  font-size: 8px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
+}
+
+.division-report-page .activity-data-row span {
+  min-width: 0;
+  color: #20364b;
+  font-size: 10px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.division-report-page .activity-data-row-message {
+  grid-column: 1 / -1;
+  display: block;
+}
+
+.division-report-page .activity-data-row-message strong {
+  display: block;
+  margin-bottom: 7px;
+}
+
+.division-report-page .activity-data-row-message span {
+  display: block;
+  padding: 12px;
+  border: 1px solid #e3ebf2;
+  border-radius: 7px;
+  background: #ffffff;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.6;
+}
+
+
+/* ---------- Full-page controls ---------- */
+
+.division-report-page > .view-all {
+  margin-top: 16px;
+}
+
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .division-report-page .activity-data-box {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .division-report-page .activity-data-row-message {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 620px) {
+  .division-report-page .activity-data-box {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+
+  .division-report-page .activity-data-row,
+  .division-report-page .activity-data-row-message {
+    grid-column: 1 / -1;
+  }
+
+  .division-report-page .activities-panel .activity-item {
+    padding: 12px;
+  }
+}
+
+/* ============================================================
+   FINAL LIVE ACTIVITY LAYOUT
+   ============================================================ */
+
+/* ============================================================
+   FINAL LIVE ACTIVITY LAYOUT
+   ============================================================ */
+
+/* ============================================================
+   DASHBOARD — 5 ACTIVITIES / LOCAL SCROLL ONLY
+   ============================================================ */
+
+.dashboard-activities-panel {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.dashboard-activities-panel .activities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  /*
+   * IMPORTANT:
+   * Only this element scrolls.
+   * The rest of the Dashboard remains fixed.
+   */
+  max-height: 540px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: 0 10px 8px 17px;
+
+  scrollbar-width: thin;
+  scrollbar-color: #b9c8d5 transparent;
+
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+}
+
+.dashboard-activities-panel .activities-list::-webkit-scrollbar {
+  width: 7px;
+}
+
+.dashboard-activities-panel .activities-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dashboard-activities-panel .activities-list::-webkit-scrollbar-thumb {
+  background: #b9c8d5;
+  border-radius: 10px;
+}
+
+.dashboard-activities-panel .activity-item {
+  flex: 0 0 auto;
+
+  width: 100%;
+  min-height: 0;
+
+  box-sizing: border-box;
+
+  padding: 12px 13px;
+
+  border: 1px solid #dce6ee;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.dashboard-activities-panel .activity-item:hover {
+  border-color: #c5d5e2;
+  box-shadow: 0 3px 10px rgba(16, 42, 67, 0.06);
+}
+
+.dashboard-activities-panel .activity-icon {
+  flex: 0 0 36px;
+
+  width: 36px;
+  height: 36px;
+
+  border-radius: 9px;
+}
+
+.dashboard-activities-panel .activity-content {
+  width: auto;
+  min-width: 0;
+
+  flex: 1 1 auto;
+}
+
+.dashboard-activities-panel .activity-title-row {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 7px;
+}
+
+.dashboard-activities-panel .activity-title-row strong {
+  min-width: 0;
+
+  color: #102a43;
+
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
+}
+
+.dashboard-activities-panel .activity-content > .activity-data-row {
+  width: 100%;
+
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 6px;
+
+  margin-top: 6px;
+}
+
+.dashboard-activities-panel .activity-data-box {
+  min-height: 26px;
+
+  display: inline-flex;
+  align-items: center;
+
+  box-sizing: border-box;
+
+  padding: 4px 8px;
+
+  border: 1px solid #d7e1e9;
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  color: #263d52;
+
+  font-size: 8px;
+  line-height: 1.35;
+
+  white-space: normal;
+}
+
+.dashboard-activities-panel .activity-data-box b {
+  color: #172b3e;
+  font-weight: 750;
+  margin-right: 2px;
+}
+
+.dashboard-activities-panel .activity-meta {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 7px;
+
+  margin-top: 8px;
+  padding-top: 7px;
+
+  border-top: 1px solid #e7edf2;
+
+  color: #8495a5;
+
+  font-size: 8px;
+  line-height: 1.35;
+}
+
+.dashboard-activities-panel .activity-uid {
+  max-width: 100%;
+
+  display: inline-flex;
+  align-items: center;
+
+  padding: 4px 6px;
+
+  border-radius: 5px;
+
+  background: #edf5ff;
+
+  color: #245b8f;
+
+  font-weight: 700;
+
+  overflow-wrap: anywhere;
+}
+
+.dashboard-activities-panel .activity-meta-divider {
+  flex: 0 0 1px;
+
+  width: 1px;
+  height: 12px;
+
+  background: #d8e1e9;
+}
+
+
+/* ============================================================
+   RECENT ACTIVITIES — FULL PAGE
+   ============================================================ */
+
+.division-report-page .activities-panel {
+  width: 100%;
+  min-width: 0;
+
+  box-sizing: border-box;
+
+  overflow: visible;
+}
+
+.division-report-page .activities-panel .activities-list {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+
+  height: auto;
+  max-height: none;
+
+  overflow: visible;
+
+  padding: 0;
+}
+
+.division-report-page .activities-panel .activity-item {
+  flex: 0 0 auto;
+
+  width: 100%;
+  min-height: 86px;
+
+  box-sizing: border-box;
+
+  padding: 15px 18px;
+
+  border: 1px solid #dce6ee;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  align-items: flex-start;
+}
+
+.division-report-page .activities-panel .activity-icon {
+  flex: 0 0 40px;
+
+  width: 40px;
+  height: 40px;
+
+  border-radius: 10px;
+}
+
+.division-report-page .activities-panel .activity-content {
+  width: auto;
+  min-width: 0;
+
+  flex: 1 1 auto;
+}
+
+.division-report-page .activities-panel .activity-title-row strong {
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.division-report-page .activities-panel .activity-content p {
+  margin: 6px 0 9px;
+
+  color: #60758a;
+
+  font-size: 10px;
+  line-height: 1.55;
+
+  overflow-wrap: anywhere;
+}
+
+.division-report-page .activities-panel .activity-meta {
+  margin-top: 8px;
+  padding-top: 8px;
+
+  font-size: 9px;
+}
+
+
+/* ============================================================
+   ACTIVITY DETAILS
+   ============================================================ */
+
+.activity-detail {
+  width: 100%;
+  min-width: 0;
+}
+
+.activity-detail .panel-header {
+  margin-bottom: 0;
+}
+
+.division-report-page .activity-data-box {
+  width: 100%;
+  max-width: none;
+
+  box-sizing: border-box;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  gap: 12px;
+
+  padding: 16px;
+
+  border: 1px solid #dce6ee;
+  border-radius: 10px;
+
+  background: #ffffff;
+}
+
+.division-report-page .activity-data-row {
+  width: 100%;
+  min-width: 0;
+
+  box-sizing: border-box;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(75px, auto)
+    minmax(0, 1fr);
+
+  align-items: start;
+
+  gap: 10px;
+
+  margin: 0;
+
+  padding: 12px 14px;
+
+  border: 1px solid #e3ebf2;
+  border-radius: 8px;
+
+  background: #fbfdff;
+}
+
+.division-report-page .activity-data-row strong {
+  color: #718397;
+
+  font-size: 8px;
+  font-weight: 750;
+
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+
+  overflow-wrap: anywhere;
+}
+
+.division-report-page .activity-data-row span {
+  min-width: 0;
+
+  color: #20364b;
+
+  font-size: 11px;
+  line-height: 1.55;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
+/* MESSAGE gets the entire width */
+
+.division-report-page .activity-data-row-message {
+  grid-column: 1 / -1;
+
+  display: block;
+}
+
+.division-report-page .activity-data-row-message strong {
+  display: block;
+
+  margin-bottom: 8px;
+}
+
+.division-report-page .activity-data-row-message span {
+  display: block;
+
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 13px 14px;
+
+  border: 1px solid #e1e9f0;
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #243b53;
+
+  font-size: 11px;
+  line-height: 1.65;
+
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1100px) {
+  .dashboard-activities-panel .activities-list {
+    max-height: 500px;
+  }
+
+  .division-report-page .activity-data-box {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .dashboard-activities-panel .activities-list {
+    max-height: 470px;
+    padding-right: 6px;
+  }
+
+  .division-report-page .activity-data-box {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+
+  .division-report-page .activity-data-row-message {
+    grid-column: 1 / -1;
+  }
+}

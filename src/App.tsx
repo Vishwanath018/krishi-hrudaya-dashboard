@@ -70,27 +70,7 @@ const chartData = [
   { name: "Assigned Products", value: 1683 }
 ];
 
-const activities = [
 
-  {
-    title: "Motor stopped in MANUAL mode (Stop PB)..!",
-    description:
-      "R: 419 volts Y: 338 volts B: 313 volts R: 0 amps Y: 0 amps B: 0 amps Current Run Time: 590 minutes Total Run Time: 590 minutes Water Yield: 103250 liters",
-    uid: "865357062788797",
-    time: "09:36 PM",
-    icon: Settings2,
-    type: "success"
-  },
-  {
-    title: "Motor stopped in REMOTE COMMAND mode..!",
-    description:
-      "R: 397 volts Y: 392 volts B: 426 volts R: 0 amps Y: 0 amps B: 0 amps Current Run Time: 29 minutes Total Run Time: 73 minutes Water Yield: 12775 liters",
-    uid: "8656310987417142",
-    time: "09:31 PM",
-    icon: Activity,
-    type: "warning"
-  }
-];
 
 const notifications: [string, string, string, any, string][] = [
   ["Power failure detected", "Ward 26 Ãƒâ€¦Ã¢â‚¬Å“ Rammurthy Nagara", "2 mins ago", Bell, "danger"],
@@ -131,6 +111,54 @@ useEffect(() => {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [activeMenu, setActiveMenu] = useState("Dashboard");
+  const [recentActivities, setRecentActivities] = useState<any[]>([]);
+  const [recentActivitiesLoading, setRecentActivitiesLoading] = useState(false);
+  const [recentActivitiesError, setRecentActivitiesError] = useState("");
+  const [recentActivitiesLimit, setRecentActivitiesLimit] = useState<"20" | "50" | "100" | "all">("20");
+  const [selectedActivity, setSelectedActivity] = useState<any | null>(null);
+
+  const loadRecentActivities = async (
+    limit: "20" | "50" | "100" | "all" = "20"
+  ) => {
+    setRecentActivitiesLoading(true);
+    setRecentActivitiesError("");
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/dashboard/recent-activities?limit=${limit}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.message || "Failed to load recent activities.");
+      }
+
+      setRecentActivities(Array.isArray(result.data) ? result.data : []);
+    } catch (error) {
+      console.error("Recent activities error:", error);
+
+      setRecentActivitiesError(
+        error instanceof Error
+          ? error.message
+          : "Unable to load recent activities."
+      );
+
+      setRecentActivities([]);
+    } finally {
+      setRecentActivitiesLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadRecentActivities("20");
+  }, []);
+
+
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [assistantMaximized, setAssistantMaximized] = useState(false);
   const [search, setSearch] = useState("");
@@ -1385,129 +1413,183 @@ useEffect(() => {
                     </div>
                   </div>
                 </section>
-                <section className="panel activities-panel">
+                <section className="panel activities-panel dashboard-activities-panel">
                   <div className="panel-header">
                     <div>
                       <span className="panel-kicker">LIVE MONITORING</span>
                       <h3>Recent Activities</h3>
                     </div>
-                    <button className="view-all">View All</button>
+                    <button
+                      className="view-all"
+                      onClick={() => {
+                        setRecentActivitiesLimit("20");
+                        setActiveMenu("Recent Activities");
+                        loadRecentActivities("20");
+                      }}
+                    >
+                      View All
+                    </button>
                   </div>
 
                   <div className="activities-list">
-                    {activities.map((activity) => {
-                      const Icon = activity.icon;
+                    {recentActivities.slice(0, 5).map((activity) => {
+                      const eventMessage =
+                        String(activity.message || "").trim();
 
-                      const voltage = activity.description.match(
-                        /R:\s*(\d+)\s*volts\s*Y:\s*(\d+)\s*volts\s*B:\s*(\d+)\s*volts/
+                      const eventCategory =
+                        String(activity.event_category || "Event").trim();
+
+                      const eventUid =
+                        String(activity.uid || "N/A").trim();
+
+
+                      const voltageMatch = eventMessage.match(
+                        /R:\s*([\d.]+)\s*volts\s*Y:\s*([\d.]+)\s*volts\s*B:\s*([\d.]+)\s*volts/i
                       );
 
-                      const amps = activity.description.match(
-                        /R:\s*(\d+)\s*amps\s*Y:\s*(\d+)\s*amps\s*B:\s*(\d+)\s*amps/
+                      const currentMatch = eventMessage.match(
+                        /R:\s*([\d.]+)\s*amps\s*Y:\s*([\d.]+)\s*amps\s*B:\s*([\d.]+)\s*amps/i
                       );
 
-                      const currentRunTime = activity.description.match(
-                        /Current Run Time:\s*([^;]+)/
-                      )?.[1];
+                      const currentRunMatch = eventMessage.match(
+                        /Current Run Time:\s*([\d.]+)\s*minutes/i
+                      );
 
-                      const totalRunTime = activity.description.match(
-                        /Total Run Time:\s*([^;]+)/
-                      )?.[1];
+                      const totalRunMatch = eventMessage.match(
+                        /Total Run Time:\s*([\d.]+)\s*minutes/i
+                      );
 
-                      const waterYield = activity.description.match(
-                        /Water Yield:\s*(.+)$/
-                      )?.[1];
+                      const waterYieldMatch = eventMessage.match(
+                        /Water Yield\s*:?\s*([\d.]+)\s*liters/i
+                      );
 
-                      const descriptionText = activity.description
-                        .replace(
-                          /R:\s*\d+\s*volts\s*Y:\s*\d+\s*volts\s*B:\s*\d+\s*volts/,
-                          ""
-                        )
-                        .replace(
-                          /R:\s*\d+\s*amps\s*Y:\s*\d+\s*amps\s*B:\s*\d+\s*amps/,
-                          ""
-                        )
-                        .replace(/Current Run Time:\s*[^;]+;?/g, "")
-                        .replace(/Total Run Time:\s*[^;]+;?/g, "")
-                        .replace(/Water Yield:\s*.+$/g, "")
-                        .trim();
+                      const titleMatch = eventMessage.match(
+                        /^(.*?)(?=\s*R:\s*[\d.]+\s*volts|\s*Power failed|\s*$)/i
+                      );
+
+                      const eventTitle =
+                        titleMatch?.[1]?.trim() ||
+                        eventMessage.split("\n")[0] ||
+                        eventCategory;
+
+                      const isPowerFailure =
+                        /power failed|power failure/i.test(eventMessage);
+
+                      const isPowerNotification =
+                        /power notification/i.test(eventMessage);
+
+                      const iconType = isPowerFailure
+                        ? "danger"
+                        : isPowerNotification
+                          ? "warning"
+                          : "success";
 
                       return (
-                        <div className="activity-item" key={activity.uid}>
-                          <div className={`activity-icon ${activity.type}`}>
-                            <Icon size={18} />
+                        <div
+                          className="activity-item"
+                          key={String(activity.id ?? eventUid)}
+                          onClick={() => {
+                            setSelectedActivity(activity);
+                            setActiveMenu("Activity Details");
+                          }}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <div className={`activity-icon ${iconType}`}>
+                            {isPowerFailure || isPowerNotification ? (
+                              <Activity size={18} />
+                            ) : (
+                              <Settings2 size={18} />
+                            )}
                           </div>
 
                           <div className="activity-content">
                             <div className="activity-title-row">
-                              <strong>{activity.title}</strong>
+                              <strong>{eventTitle}</strong>
                               <ChevronRight size={15} />
                             </div>
 
-                            {descriptionText && (
-                              <p className="activity-description">
-                                {descriptionText}
-                              </p>
-                            )}
-
-                            {voltage && (
-                              <div className="activity-data-row">
-                                <span className="activity-data-box">
-                                  <b>R:</b> {voltage[1]} volts
-                                </span>
-                                <span className="activity-data-box">
-                                  <b>Y:</b> {voltage[2]} volts
-                                </span>
-                                <span className="activity-data-box">
-                                  <b>B:</b> {voltage[3]} volts
-                                </span>
-                              </div>
-                            )}
-
-                            {amps && (
-                              <div className="activity-data-row">
-                                <span className="activity-data-box">
-                                  <b>R:</b> {amps[1]} amps
-                                </span>
-                                <span className="activity-data-box">
-                                  <b>Y:</b> {amps[2]} amps
-                                </span>
-                                <span className="activity-data-box">
-                                  <b>B:</b> {amps[3]} amps
-                                </span>
-                              </div>
-                            )}
-
-                            {(currentRunTime || totalRunTime || waterYield) && (
-                              <div className="activity-data-row activity-extra-row">
-                                {currentRunTime && (
+                            <div className="activity-data-row">
+                              {voltageMatch && (
+                                <>
                                   <span className="activity-data-box">
-                                    <b>Current Run Time:</b> {currentRunTime}
+                                    <b>R:</b> {voltageMatch[1]} volts
                                   </span>
-                                )}
-
-                                {totalRunTime && (
                                   <span className="activity-data-box">
-                                    <b>Total Run Time:</b> {totalRunTime}
+                                    <b>Y:</b> {voltageMatch[2]} volts
                                   </span>
-                                )}
-
-                                {waterYield && (
                                   <span className="activity-data-box">
-                                    <b>Water Yield:</b> {waterYield}
+                                    <b>B:</b> {voltageMatch[3]} volts
                                   </span>
-                                )}
-                              </div>
-                            )}
+                                </>
+                              )}
+                            </div>
+
+                            <div className="activity-data-row">
+                              {currentMatch && (
+                                <>
+                                  <span className="activity-data-box">
+                                    <b>R:</b> {currentMatch[1]} amps
+                                  </span>
+                                  <span className="activity-data-box">
+                                    <b>Y:</b> {currentMatch[2]} amps
+                                  </span>
+                                  <span className="activity-data-box">
+                                    <b>B:</b> {currentMatch[3]} amps
+                                  </span>
+                                </>
+                              )}
+                            </div>
+
+                            <div className="activity-data-row">
+                              {currentRunMatch && (
+                                <span className="activity-data-box">
+                                  <b>Current Run Time:</b>{" "}
+                                  {currentRunMatch[1]} minutes
+                                </span>
+                              )}
+
+                              {totalRunMatch && (
+                                <span className="activity-data-box">
+                                  <b>Total Run Time:</b>{" "}
+                                  {totalRunMatch[1]} minutes
+                                </span>
+                              )}
+
+                              {waterYieldMatch && (
+                                <span className="activity-data-box">
+                                  <b>Water Yield:</b>{" "}
+                                  {waterYieldMatch[1]} liters
+                                </span>
+                              )}
+                            </div>
 
                             <div className="activity-meta">
                               <span className="activity-uid">
-                                UID: {activity.uid}
+                                UID: {eventUid}
                               </span>
+
                               <span className="activity-meta-divider" />
-                              <span>Sep 13, 2026</span>
+
+                              <span>
+                                {activity.created_at
+                                  ? new Date(
+                                      activity.created_at
+                                    ).toLocaleDateString()
+                                  : "Unknown date"}
+                              </span>
+
                               <span className="activity-meta-divider" />
-                              <span>{activity.time}</span>
+
+                              <span>
+                                {activity.created_at
+                                  ? new Date(
+                                      activity.created_at
+                                    ).toLocaleTimeString([], {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })
+                                  : "Unknown time"}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -1545,6 +1627,202 @@ useEffect(() => {
                 </div>
               </section>
             </>
+          ) : activeMenu === "Recent Activities" ? (
+            <section className="division-report-page">
+              <div className="report-filter-bar">
+                <div className="report-filter-heading">
+                  <div>
+                    <span>LIVE MONITORING</span>
+                    <h1>Recent Activities</h1>
+                  </div>
+                  <small>
+                    Live activity records from the read-only database
+                  </small>
+                </div>
+
+                <div className="report-filters">
+                  <label>
+                    <span>Show</span>
+                    <select
+                      value={recentActivitiesLimit}
+                      onChange={(e) => {
+                        const value = e.target.value as
+                          | "20"
+                          | "50"
+                          | "100"
+                          | "all";
+
+                        setRecentActivitiesLimit(value);
+                        loadRecentActivities(value);
+                      }}
+                    >
+                      <option value="20">Recent 20</option>
+                      <option value="50">Recent 50</option>
+                      <option value="100">Recent 100</option>
+                      <option value="all">All</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              <section className="panel activities-panel">
+                <div className="panel-header">
+                  <div>
+                    <span className="panel-kicker">EVENT LOGS</span>
+                    <h3>
+                      {recentActivitiesLimit === "all"
+                        ? "All Activities"
+                        : `Recent ${recentActivitiesLimit}`}
+                    </h3>
+                  </div>
+                </div>
+
+                {recentActivitiesLoading ? (
+                  <div className="empty-state">
+                    Loading recent activities...
+                  </div>
+                ) : recentActivitiesError ? (
+                  <div className="empty-state">
+                    {recentActivitiesError}
+                  </div>
+                ) : recentActivities.length === 0 ? (
+                  <div className="empty-state">
+                    No activities found.
+                  </div>
+                ) : (
+                  <div className="activities-list">
+                    {recentActivities.map((activity) => {
+                      const eventCategory =
+                        String(activity.event_category || "Event").trim();
+
+                      const eventMessage =
+                        String(activity.message || "").trim() ||
+                        "Activity recorded.";
+
+                      const eventUser =
+                        String(activity.user_name || "System").trim();
+
+                      const eventUid =
+                        String(activity.uid || "N/A").trim();
+
+                      const eventTime = activity.created_at
+                        ? new Date(activity.created_at).toLocaleString()
+                        : "Unknown time";
+
+                      return (
+                        <div
+                          className="activity-item"
+                          key={String(activity.id ?? eventUid)}
+                          onClick={() => {
+                            setSelectedActivity(activity);
+                            setActiveMenu("Activity Details");
+                          }}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <div className="activity-icon">
+                            <Activity size={18} />
+                          </div>
+
+                          <div className="activity-content">
+                            <div className="activity-title-row">
+                              <strong>{eventCategory}</strong>
+                              <ChevronRight size={15} />
+                            </div>
+
+                            <p>{eventMessage}</p>
+
+                            <div className="activity-meta">
+                              <span>{eventUid}</span>
+                              <span>{eventUser}</span>
+                              <span>{eventTime}</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </section>
+
+              <button
+                className="view-all"
+                onClick={() => setActiveMenu("Dashboard")}
+              >
+                <ChevronRight
+                  size={16}
+                  style={{ transform: "rotate(180deg)" }}
+                />
+                Back to Dashboard
+              </button>
+            </section>
+          ) : activeMenu === "Activity Details" ? (
+            <section className="division-report-page">
+              <div className="report-filter-bar">
+                <div className="report-filter-heading">
+                  <div>
+                    <span>LIVE MONITORING</span>
+                    <h1>Activity Details</h1>
+                  </div>
+                  <small>
+                    Complete information for the selected event
+                  </small>
+                </div>
+              </div>
+
+              <section className="panel activities-panel">
+                {!selectedActivity ? (
+                  <div className="empty-state">
+                    No activity selected.
+                  </div>
+                ) : (
+                  <div className="activity-detail">
+                    <div className="panel-header">
+                      <div>
+                        <span className="panel-kicker">EVENT DETAILS</span>
+                        <h3>
+                          {String(
+                            selectedActivity.event_category || "Activity"
+                          )}
+                        </h3>
+                      </div>
+                    </div>
+
+                    <div className="activity-data-box">
+                      {Object.entries(selectedActivity).map(
+                        ([key, value]) => (
+                          <div
+                            className={`activity-data-row ${
+                              key === "message"
+                                ? "activity-data-row-message"
+                                : ""
+                            }`}
+                            key={key}
+                          >
+                            <strong>{key}</strong>
+                            <span>
+                              {value === null || value === undefined
+                                ? "—"
+                                : String(value)}
+                            </span>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
+              </section>
+
+              <button
+                className="view-all"
+                onClick={() => setActiveMenu("Recent Activities")}
+              >
+                <ChevronRight
+                  size={16}
+                  style={{ transform: "rotate(180deg)" }}
+                />
+                Back to Recent Activities
+              </button>
+            </section>
           ) : activeMenu === "Reports" ? (
             <section className="division-report-page">
               <div className="report-filter-bar">
